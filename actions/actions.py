@@ -11,11 +11,26 @@ import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
 import httpx
+try:
+    from .subject_catalog import SubjectCatalogRepository
+    from .subject_resolver import SubjectResolver
+except ImportError:  # Support direct loading by the action unit-test harness.
+    from actions.subject_catalog import SubjectCatalogRepository
+    from actions.subject_resolver import SubjectResolver
 
 load_dotenv()
 url: str = os.getenv("SUPABASE_URL")
 key: str = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
+
+
+subject_catalog = SubjectCatalogRepository(lambda: supabase, ttl_seconds=600)
+subject_resolver = SubjectResolver()
+
+
+def _resolve_subject(candidates: List[Dict[str, Any]], expression: str):
+    """Backward-compatible wrapper for the pure resolver."""
+    return subject_resolver.resolve(candidates, expression)
 
 class ActionAuthenticateUser(Action):
     def name(self):
@@ -58,14 +73,22 @@ class ActionConsultarAsistencia(Action):
             return [SlotSet("flujo_actual", "consultar_asistencia")]
 
         try:
-            # Buscar el código de la materia por nombre
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
+            catalog_rows = subject_catalog.get_subjects()
+            resolution, resolved = subject_resolver.resolve(catalog_rows, materia)
+            if resolution == "ambiguous":
+                names = ", ".join(sorted({candidate["nombre"] for candidate in resolved}))
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{materia}': {names}. "
+                    "Por favor, especifica cuál necesitas."
+                )
+                return [SlotSet("flujo_actual", "consultar_asistencia"), SlotSet("materia", None)]
+
+            if resolution != "resolved":
                 dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
                 return [SlotSet("flujo_actual", None)]
 
-            materia_codigo = materia_resp.data[0]["codigo"]
-            nombre_materia = materia_resp.data[0]["nombre"]
+            materia_codigo = resolved["codigo"]
+            nombre_materia = resolved["nombre"]
 
             # Buscar las asistencias del estudiante para esa materia
             asistencia_resp = supabase.table("Asistencia").select('*').eq("estudiante", matricula).eq("materia", materia_codigo).execute()

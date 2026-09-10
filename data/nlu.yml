@@ -305,19 +305,87 @@ nlu:
   - intent: informar_asistencia
     examples: |
       - ¿La asistencia a clases es obligatoria?
-      - ¿Es presencial?
       - El cursado es obligatorio?
       - cual es el porcentaje de asistencia obligatoria
       - Es obligatorio asistir a clases?
       - Hola buenas tardes, la asistencia a cada clase es obligatoria o depende de cada profesor?
       - Es obligatorio asistir a clases presenciales?
-      - Las materias son presenciales?
       - La cursada de la carrera es presencial? Hay un margen de asistencia obligatoria?
       - Que porcentaje de asistencia tengo que cumplir?
       - ¿La asistencia presencial es obligatoria?
       - Es obligatorio ir a clases?
-      - ¿La cursada es presencial o a distancia?
       - es obligatorio asistir a clases?
+      - cuantas faltas se permiten antes de quedar libre
+      - cual es la cantidad maxima de ausencias admitidas
+      - que limite de inasistencias establece la universidad
+      - cuantos dias se puede faltar sin perder la regularidad
+      - que porcentaje exige la institucion para ser regular
+      - cual es la asistencia minima obligatoria para aprobar la cursada
+      - cuanto presentismo exige la facultad
+      - que nivel de asistencia se requiere para conservar la regularidad
+      - existe un maximo permitido de faltas por materia
+      - cuantas clases puede perder un alumno y seguir regular
+      - que pasa si un estudiante supera el limite de ausencias
+      - cual es la norma general sobre inasistencias
+      - necesito conocer el requisito institucional de asistencia
+      - que porcentaje deben cumplir los estudiantes
+      - hay una cantidad permitida de clases faltadas
+      - cuantas ausencias autoriza el reglamento academico
+      - cual es el minimo requerido de presentismo
+      - que asistencia hace falta para mantener la condicion regular
+      - las faltas permitidas dependen de cada materia
+      - cual es el margen institucional de inasistencias
+      - hasta cuantas clases se permite faltar
+      - que requisito de asistencia rige para regularizar una materia
+      - informacion sobre el porcentaje obligatorio de asistencia
+      - normativa de asistencia y faltas permitidas
+      - necesito saber el porcentaje minimo requerido por la facultad
+      - cual seria la asistencia mínima exigida por el reglamento
+      - cuanto es el minimo reglamentario de presentismo
+      - que valor minimo de asistencia corresponde para quedar regular
+      - puedo acumular faltas sin perder la regularidad
+      - cuantas faltas puedo sumar como maximo permitido
+      - hay un tope para las faltas que puede tener un estudiante
+      - cantidad de ausencias que puedo tener antes de quedar libre
+      - que asistencia necesito cumplir para ser alumno regular
+      - que porcentaje debo alcanzar para poder regularizar
+      - asistencia minima necesaria para mantener la regularidad
+      - minimo de asistencia que pide el reglamento universitario
+      - cual es el porcentaje mínimo exigible
+      - se permite tener inasistencias durante el cursado
+      - cuantos dias puedo ausentarme segun la normativa
+      - cual es el piso obligatorio de asistencia
+      - quiero conocer el tope de ausencias autorizado
+      - cuantas inasistencias puedo tener como maximo
+      - decime el porcentaje minimo obligatorio
+      - cantidad maxima de clases que se permite perder
+      - que limite de faltas puedo tener durante la cursada
+      - hasta cuantas faltas puede llegar a tener una persona sin quedar libre
+      - cuál es el tope de inasistencias que admite la cursada
+      - qué máximo de ausencias permite el reglamento
+      - hasta qué cantidad de faltas se mantiene la regularidad
+      - qué máximo de clases puedo perder sin quedar libre
+      - qué límite de faltas permite la institución
+      - cuál es la cantidad de faltas que se permite acumular
+      - cuántas faltas puedo acumular sin perder la regularidad
+      - cuál es la asistencia mínima requerida por la institución
+      - mínimo de asistencia exigido para conservar la regularidad
+      - porcentaje mínimo obligatorio de asistencia para aprobar
+      - qué nivel mínimo de asistencia establece el reglamento
+      - cuántas faltas se pueden tener según la normativa
+      - cuántas faltas podría tener un alumno sin perder la regularidad
+      - cuántas faltas están permitidas durante el cursado
+      - qué cantidad de faltas está permitida por la institución
+      - cuál es el máximo permitido de ausencias
+      - cuántas ausencias permite el reglamento académico
+      - qué límite de inasistencias puedo tener según la universidad
+      - qué cantidad de faltas admite la universidad
+      - cuántas faltas me permite la institución durante la cursada
+      - cuántas ausencias puedo tener antes de quedar libre
+      - cuál es el máximo de faltas que puedo registrar según el reglamento
+      - cuántas faltas puedo tener antes de quedar libre
+      - cuántas faltas puedo tener y seguir siendo regular
+      - cuántas faltas puedo tener según el reglamento
   - intent: informar_examen_recuperatorio
     examples: |
       - ¿Cómo son los exámenes? ¿Existen recuperatorios?
@@ -692,6 +760,73 @@ nlu:
       - quiero ver mi asistencia de [programacion](materia) con matricula [66001](matricula)
       - necesito consultar mi asistencia de [fisica](materia) matricula [66022](matricula)
       - hola quiero saber mis asistencia en [fisica](materia)
+      - cuantas faltas llevo registradas
+      - quiero conocer mis faltas acumuladas
+      - mostrame la cantidad de ausencias que tengo
+      - necesito saber mis inasistencias
+      - cuantas veces falte a clases
+      - decime cuantos dias estuve ausente
+      - a cuantas clases no asisti
+      - cuantas clases tengo faltadas
+      - quiero ver mis clases asistidas
+      - a cuantas clases fui hasta ahora
+      - cual es mi porcentaje personal de asistencia
+      - como vengo con mi presentismo
+      - mostrame mis faltas en [Física](materia)
+      - cuantas ausencias acumulo para [fisica](materia)
+      - quiero saber mis inasistencias de [FISICA](materia)
+      - como vengo de asistencia en [Matemática](materia)
+      - decime mis faltas para [matematica](materia)
+      - cuantas clases tengo presentes en [MATEMATICA](materia)
+      - en [Física](materia) quiero conocer mis ausencias
+      - [Matemática](materia) es la materia de la que quiero ver mis faltas
+      - asistencia personal de [Programación Estructurada](materia)
+      - cuantas veces falte a [Redes de Computadoras 1](materia)
+      - quiero mi porcentaje de asistencia de [redes de computadoras 1](materia)
+      - clases asistidas en [Redes de Computadoras 2](materia)
+      - mis faltas de [Fisica 2](materia)
+      - cuantas inasistencias tengo para [Inteligencia Artificial 1](materia)
+      - necesito mi asistencia de [Análisis Matemático 1](materia)
+      - ahora consultame las ausencias de [quimica](materia)
+      - y mi asistencia para [historia](materia)
+      - cambiemos a [Matemática](materia) para ver mis faltas
+      - para [Física](materia) cuantas clases perdi
+      - mis ausencias, materia [Matemática](materia)
+      - faltas personales en [fisica](materia)
+      - porcentaje personal de [matematica](materia)
+      - presentes y ausentes de [FÍSICA](materia)
+      - quiero saber cuantas clases complete en [Matemática](materia)
+      - decime las clases a las que asisti en [fisica](materia)
+      - necesito el total de faltas que acumule en [Redes de Computadoras 1](materia)
+      - revisa mis ausencias para [Programacion Estructurada](materia)
+      - como esta mi asistencia de [Fisica 2](materia)
+      - [Redes de Computadoras 1](materia), quiero revisar mi presentismo
+      - [Programación Estructurada](materia), mostrame mis ausencias
+      - [Física 2](materia) es donde necesito consultar mis faltas
+      - [Análisis Matemático 1](materia), decime mis clases presentes
+      - para [Programacion Estructurada](materia) decime cuantas veces asisti
+      - en [Redes de Computadoras 2](materia) quiero saber cuantas veces estuve presente
+      - quiero conocer las ausencias que llevo acumuladas
+      - cuantas faltas tengo registradas hasta hoy
+      - decime mi porcentaje actual de asistencia
+      - cantidad de clases que ya perdi
+      - quiero saber cuantas veces asisti durante este periodo
+      - decime cuantas clases asisti hasta ahora
+      - cuántas faltas llevo acumuladas en este período
+      - cuántas ausencias figuran en mi registro
+      - qué cantidad de clases perdí hasta hoy
+      - cómo está mi porcentaje personal actual
+      - quiero saber cuántas inasistencias tengo registradas
+      - cuántas clases dejé de asistir durante la cursada
+      - cuántas faltas tengo acumuladas ahora
+      - cuántas ausencias figuran en mi historial
+      - cuántas inasistencias llevo este cuatrimestre
+      - cuántas clases falté hasta el momento
+      - cuántas faltas tengo ahora en mi registro
+      - cuántas faltas tengo este cuatrimestre
+      - cuántas faltas tengo anotadas
+      - cómo está mi asistencia actual
+      - cuál es mi porcentaje personal de asistencia
   - intent: proporcionar_materia_para_asistencia
     examples: |
       - La materia es [matematica](materia)

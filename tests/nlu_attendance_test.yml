@@ -1,0 +1,38 @@
+version: "3.1"
+
+# Held-out evaluation examples for the personal-attendance/policy boundary.
+# These examples intentionally do not belong in data/nlu.yml.
+nlu:
+  - intent: consultar_asistencia
+    examples: |
+      - ¿Cuántas faltas tengo en [Física](materia)?
+      - ¿Cuántas veces falté a [Física](materia)?
+      - ¿Cuántas inasistencias tengo en [Física](materia)?
+      - ¿Cómo estoy de asistencia en [Física](materia)?
+      - ¿Qué porcentaje de asistencia tengo en [Física](materia)?
+      - ¿Cuántas clases asistí en [Física](materia)?
+      - decime cuántas veces no fui a [física](materia)
+      - qué cantidad de ausencias llevo en [matemática](materia)
+      - cómo estoy con las faltas en [física](materia)
+      - faltas de [física](materia)
+      - qué porcentaje de asistencia tengo en [física](materia)
+      - cuántas clases fui a [matemática](materia)
+      - cuantas inasistencias acumule en [fisica](materia)
+      - [Física](materia), cuántas ausencias llevo
+      - en [matematica](materia) cómo vengo de asistencia
+      - asistencia [programacion](materia)
+      - cómo vengo con mis inasistencias
+      - a [Redes de Computadoras 1](materia) cuántas veces asistí
+      - ¿y en [Matemática](materia)?
+
+  - intent: informar_asistencia
+    examples: |
+      - ¿Cuál es el porcentaje mínimo de asistencia?
+      - ¿Cuántas faltas puedo tener?
+      - ¿Qué asistencia necesito para regularizar?
+      - qué porcentaje necesito para regularizar
+      - cuántas faltas están permitidas
+      - cuál es el mínimo de asistencia
+      - cual es el minimo de asistencia
+      - asistencia mínima
+      - para regularizar qué asistencia hace falta

@@ -1,0 +1,80 @@
+version: "3.1"
+
+# Historias de caracterización para distinguir entre la asistencia personal
+# del estudiante y la normativa institucional de asistencia. Algunas pueden
+# fallar con el modelo actual; representan especificaciones de regresión y no
+# implican que el comportamiento ya esté implementado.
+stories:
+  - story: asistencia A - solicitud personal con materia incluida
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuántas faltas tengo en [Física](materia)?
+        intent: consultar_asistencia
+      - slot_was_set:
+          - materia: Física
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+
+  - story: asistencia B - solicitud personal sin materia y respuesta posterior
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuántas faltas tengo?
+        intent: consultar_asistencia
+      - action: asistencia_form
+      - active_loop: asistencia_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física](materia)
+        intent: proporcionar_materia_para_asistencia
+      - slot_was_set:
+          - materia: Física
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+
+  - story: asistencia C - consulta sobre requisitos generales de asistencia
+    steps:
+      - user: |
+          ¿Cuántas faltas puedo tener?
+        intent: informar_asistencia
+      - action: utter_respuesta_asistencia
+
+  - story: asistencia D - cambio de materia en una consulta posterior
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuántas faltas tengo en [Física](materia)?
+        intent: consultar_asistencia
+      - slot_was_set:
+          - materia: Física
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+      - slot_was_set:
+          - materia: null
+      - user: |
+          ¿Y en [Matemática](materia)?
+        intent: consultar_asistencia
+      - slot_was_set:
+          - materia: Matemática
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
