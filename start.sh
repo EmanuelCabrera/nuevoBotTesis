@@ -1,15 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-# Script para iniciar tanto el servidor de acciones como el servidor Rasa
+# Puertos (local / Render)
+RASA_PORT="${PORT:-5005}"
+ACTIONS_PORT="${ACTIONS_PORT:-5055}"
+CORS_VAL="${CORS:-*}"
 
-echo "Iniciando servidor de acciones de Rasa..."
-rasa run actions --port 5055 &
+# Apagado prolijo
+trap "echo '→ Apagando...'; kill 0" SIGTERM SIGINT
 
-# Esperar un poco para que el servidor de acciones se inicie
-sleep 5
+echo "Iniciando servidor de acciones de Rasa en puerto ${ACTIONS_PORT} ..."
+# Quitar --host: no existe en 'rasa run actions' para Rasa 3.6
+rasa run actions --port "${ACTIONS_PORT}" --debug &
 
-echo "Iniciando servidor Rasa..."
-rasa run --enable-api --cors "*" --port 5005 -i 0.0.0.0
+# Espera corta
+sleep 3
 
-# Mantener el script corriendo
-wait
+# Si tenés un modelo empaquetado fijo
+MODEL_PATH="/app/models/model.tar.gz"
+RASA_ARGS=( --enable-api --cors "${CORS_VAL}" -i 0.0.0.0 -p "${RASA_PORT}" --debug )
+if [ -f "${MODEL_PATH}" ]; then
+  RASA_ARGS+=( --model "${MODEL_PATH}" )
+fi
+
+echo "Iniciando servidor Rasa en 0.0.0.0:${RASA_PORT} ..."
+rasa run "${RASA_ARGS[@]}"
+
+wait -n

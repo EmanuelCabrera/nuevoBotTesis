@@ -4,8 +4,6 @@ __pycache__/
 *$py.class
 .rasa
 .rasa/
-.models
-.models/
 # C extensions
 *.so
 
@@ -165,5 +163,4 @@ cython_debug/
 venv_rasa/
 
 results/
-models/
 .qodo/
