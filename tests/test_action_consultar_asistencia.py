@@ -168,7 +168,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
     def test_successful_query_filters_by_student_and_subject(self):
         backend = _FakeSupabase(
             rows={
-                "Materia": [{"codigo": "FIS1", "nombre": "Física"}],
+                "Materia": [{"codigo": "FIS1", "nombre": "Física I"}],
                 "Asistencia": [{"is_present": True}],
             }
         )
@@ -181,7 +181,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
         self.assertIn(("Materia", "select", "codigo, nombre"), backend.calls)
         self.assertIn(("Asistencia", "eq", "estudiante", "66001"), backend.calls)
         self.assertIn(("Asistencia", "eq", "materia", "FIS1"), backend.calls)
-        self.assertTrue(any("Asistencia en FÍSICA" in message for message in self.dispatcher.messages))
+        self.assertTrue(any("Asistencia en FÍSICA I" in message for message in self.dispatcher.messages))
         self.assertEqual(
             _events_as_dict(events),
             {"flujo_actual": None, "materia": None},
@@ -190,7 +190,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
     def test_present_absent_total_and_percentage_calculation(self):
         backend = _FakeSupabase(
             rows={
-                "Materia": [{"codigo": "MAT1", "nombre": "Matemática"}],
+                "Materia": [{"codigo": "FIS1", "nombre": "Física I"}],
                 "Asistencia": [
                     {"is_present": True},
                     {"is_present": True},
@@ -201,7 +201,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
         )
 
         self.run_action(
-            {"is_authenticated": True, "matricula": "66001", "materia": "Matemática"},
+            {"is_authenticated": True, "matricula": "66001", "materia": "Física"},
             backend,
         )
 
@@ -214,7 +214,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
     def test_successful_response_is_consistent_and_reports_requested_subject(self):
         backend = _FakeSupabase(
             rows={
-                "Materia": [{"codigo": "FIS1", "nombre": "Física"}],
+                "Materia": [{"codigo": "FIS1", "nombre": "Física I"}],
                 "Asistencia": [
                     {"is_present": True},
                     {"is_present": True},
@@ -238,7 +238,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
             re.search(r"Porcentaje de asistencia: ([\d.]+)%", output).group(1)
         )
 
-        self.assertIn("Asistencia en FÍSICA", output)
+        self.assertIn("Asistencia en FÍSICA I", output)
         self.assertEqual(total, attended + absent)
         self.assertAlmostEqual(percentage, attended / total * 100, places=2)
         self.assertIn(("Asistencia", "eq", "materia", "FIS1"), backend.calls)
@@ -259,7 +259,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
     def test_no_attendance_records(self):
         backend = _FakeSupabase(
             rows={
-                "Materia": [{"codigo": "FIS1", "nombre": "Física"}],
+                "Materia": [{"codigo": "FIS1", "nombre": "Física I"}],
                 "Asistencia": [],
             }
         )
@@ -319,7 +319,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
                 self.dispatcher = _CollectingDispatcher()
                 backend = _CatalogSupabase(
                     rows={
-                        "Materia": [{"codigo": "FIS1", "nombre": "Física"}],
+                        "Materia": [{"codigo": "FIS1", "nombre": "Física I"}],
                         "Asistencia": [{"is_present": True}],
                     }
                 )
@@ -330,7 +330,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
                 )
 
                 output = "\n".join(self.dispatcher.messages)
-                self.assertIn("Asistencia en FÍSICA", output)
+                self.assertIn("Asistencia en FÍSICA I", output)
                 self.assertIn(("Asistencia", "eq", "materia", "FIS1"), backend.calls)
 
     def test_distinct_numbered_subject_is_not_replaced_by_first_partial_match(self):
@@ -401,8 +401,8 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
         backend = _CatalogSupabase(
             rows={
                 "Materia": [
-                    {"codigo": "RC10", "nombre": "Redes de Computadoras 10"},
-                    {"codigo": "RC1", "nombre": "Redes de Computadoras 1"},
+                    {"codigo": "RC2", "nombre": "Redes de Computadoras II"},
+                    {"codigo": "RC1", "nombre": "Redes de Computadoras I"},
                 ],
                 "Asistencia": [{"is_present": True}],
             }
