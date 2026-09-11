@@ -247,11 +247,6 @@ rules:
       - action: asistencia_form
       - active_loop: asistencia_form
 
-  - rule: proporcionar materia para asistencia (mantener)
-    steps:
-      - intent: proporcionar_materia_para_asistencia
-      - action: asistencia_form
-      - active_loop: asistencia_form
 
   ## Eliminado: ahora asistencia se gestiona con asistencia_form
 

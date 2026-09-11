@@ -35,7 +35,6 @@ intents:
   - out_of_scope
   - plazos_inscripcion
   - proporcionar_materia
-  - proporcionar_materia_para_asistencia
   - proporcionar_materia_para_inscripcion
   - proporcionar_materia_para_notas
   - proporcionar_materia_para_requerimientos

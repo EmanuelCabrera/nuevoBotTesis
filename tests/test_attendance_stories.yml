@@ -35,7 +35,7 @@ stories:
           - requested_slot: materia
       - user: |
           [Física](materia)
-        intent: proporcionar_materia_para_asistencia
+        intent: proporcionar_materia
       - slot_was_set:
           - materia: Física
       - action: asistencia_form
