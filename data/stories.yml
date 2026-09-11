@@ -742,7 +742,7 @@ stories:
       - slot_was_set:
           - is_authenticated: true
           - matricula: "66017"
-      - intent: proporcionar_materia_para_asistencia
+      - intent: proporcionar_materia
         entities:
           - materia: "matematica"
       - action: asistencia_form
@@ -769,7 +769,7 @@ stories:
       - intent: consultar_asistencia
       - action: asistencia_form
       - active_loop: asistencia_form
-      - intent: proporcionar_materia_para_asistencia
+      - intent: proporcionar_materia
         entities:
           - materia: "matematica"
       - action: asistencia_form
