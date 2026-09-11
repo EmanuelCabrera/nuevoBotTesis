@@ -838,6 +838,10 @@ nlu:
       - cuántas faltas tengo ahora en mi registro
       - cuántas faltas tengo este cuatrimestre
       - cuántas faltas tengo anotadas
+      - decime cuántas veces no asistí a [Física](materia)
+      - quiero saber cuántas clases me perdí en [Matemática](materia)
+      - cuántas veces falté a [Física 2](materia)
+      - mostrame las clases a las que no fui de [Redes de Computadoras 1](materia)
       - cómo está mi asistencia actual
       - cuál es mi porcentaje personal de asistencia
       - ¿Y en [Matemática](materia)?
