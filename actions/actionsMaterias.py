@@ -12,10 +12,14 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 import httpx
 
+from actions.subject_catalog import SubjectCatalogRepository
+from actions.subject_resolver import SubjectResolver
+
 load_dotenv()
 url: str = os.getenv("SUPABASE_URL")
 key: str = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
+subject_catalog = SubjectCatalogRepository(lambda: supabase)
 
 class ActionConsultarMaterias(Action):
 
@@ -93,37 +97,38 @@ class ActionConsultarNotas(Action):
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres consultar las notas.")
             return [SlotSet("flujo_actual", "consultar_notas")]
         try:
-            # Consulta optimizada con join para obtener nombre de materia
-            if materia:
-                # Buscar notas con filtro de materia (usando ILIKE para búsqueda flexible)
-                response = supabase.table("Notas").select("*, Materia!inner(nombre, codigo)").eq("estudiante_id", matricula).execute()
-                
-                # Filtrar por nombre de materia en el resultado
-                if response.data:
-                    filtered_data = [
-                        nota for nota in response.data 
-                        if materia.lower() in nota.get("Materia", {}).get("nombre", "").lower()
-                    ]
-                    if not filtered_data:
-                        dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                        return [SlotSet("flujo_actual", None)]
-                    response.data = filtered_data
-            else:
-                # Consulta sin filtro de materia
-                response = supabase.table("Notas").select("*, Materia(nombre)").eq("estudiante_id", matricula).execute()
+            catalog = subject_catalog.get_subjects()
+            resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
 
-            if not response.data:
-                if materia:
-                    dispatcher.utter_message(f"📊 No se encontraron notas registradas para la matrícula {matricula} en la materia '{materia}'.")
-                else:
-                    dispatcher.utter_message(f"📊 No se encontraron notas registradas para la matrícula {matricula}.")
+            if resolution_status == "not_found":
+                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
                 return [SlotSet("flujo_actual", None)]
 
-            # Mostrar el título según si se especificó materia o no
-            if materia:
-                dispatcher.utter_message(f"📊 **Notas de {materia.upper()} para la matrícula {matricula}:**")
-            else:
-                dispatcher.utter_message(f"📊 **Todas las notas para la matrícula {matricula}:**")
+            if resolution_status == "ambiguous":
+                options = ", ".join(subject["nombre"] for subject in resolution)
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
+                    "Por favor, indica cuál necesitas."
+                )
+                return [SlotSet("flujo_actual", "consultar_notas")]
+
+            canonical_code = resolution["codigo"]
+            canonical_name = resolution["nombre"]
+            response = (
+                supabase.table("Notas")
+                .select("*, Materia!inner(nombre, codigo)")
+                .eq("estudiante_id", matricula)
+                .eq("materia_codigo", canonical_code)
+                .execute()
+            )
+
+            if not response.data:
+                dispatcher.utter_message(
+                    f"📊 No se encontraron notas registradas para la matrícula {matricula} en la materia '{canonical_name}'."
+                )
+                return [SlotSet("flujo_actual", None)]
+
+            dispatcher.utter_message(f"📊 **Notas de {canonical_name.upper()} para la matrícula {matricula}:**")
 
             for nota in response.data:
                 calificacion = nota.get("nota", "Sin calificar")

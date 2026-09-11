@@ -199,14 +199,6 @@ rules:
       - intent: proporcionar_materia
       - action: action_consultar_notas
 
-  - rule: continuar consultar notas tras proporcionar_materia_para_notas
-    condition:
-      - slot_was_set:
-          - flujo_actual: consultar_notas
-    steps:
-      - intent: proporcionar_materia_para_notas
-      - action: action_consultar_notas
-
   - rule: continuar consultar requerimientos tras matricula
     condition:
       - slot_was_set:
