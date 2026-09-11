@@ -386,6 +386,19 @@ nlu:
       - cuántas faltas puedo tener antes de quedar libre
       - cuántas faltas puedo tener y seguir siendo regular
       - cuántas faltas puedo tener según el reglamento
+      - ¿Cuántas faltas puedo tener?
+      - cuántas faltas puedo tener
+      - hasta cuántas faltas puedo tener
+      - cuántas faltas me puedo sacar
+      - cuántas clases puedo llegar a faltar
+      - cuántas faltas se pueden tener
+      - cuántas inasistencias puede tener un alumno
+      - cuántos días puedo faltar
+      - cuántas veces puedo faltar a clase
+      - cuántas faltas puedo tener en total
+      - cuántas veces puedo ausentarme
+      - cuántas faltas puede acumular un alumno
+      - cuántas ausencias puede tener un estudiante regular
   - intent: informar_examen_recuperatorio
     examples: |
       - ¿Cómo son los exámenes? ¿Existen recuperatorios?
@@ -827,6 +840,31 @@ nlu:
       - cuántas faltas tengo anotadas
       - cómo está mi asistencia actual
       - cuál es mi porcentaje personal de asistencia
+      - ¿Y en [Matemática](materia)?
+      - ¿Y en [Física](materia)?
+      - ¿Y en [Programación](materia)?
+      - y en [matematica](materia)?
+      - y en [fisica](materia)?
+      - y en [programacion](materia)?
+      - y en [algebra](materia)?
+      - ahora en [Matemática](materia)
+      - ahora en [Física](materia)
+      - ahora en [matematica](materia)
+      - ahora en [fisica](materia)
+      - y para [Matemática](materia)?
+      - y para [Física](materia)?
+      - y para [matematica](materia)?
+      - también para [Física](materia)
+      - también para [Matemática](materia)
+      - qué pasa con [Física](materia)?
+      - qué pasa con [Matemática](materia)?
+      - y en [Redes de Computadoras 1](materia)?
+      - y en [Algoritmos 1](materia)?
+      - ahora consultame [Matemática](materia)
+      - ahora quiero ver [fisica](materia)
+      - cambiemos a [Matemática](materia)
+      - cambiemos a [fisica](materia)
+      - mejor consultame [algebra](materia)
   - intent: consultar_fecha_mesas_examen_final
     examples: |
       - quiero ver las fechas de examen final
