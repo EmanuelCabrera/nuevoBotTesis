@@ -73,9 +73,18 @@ rules:
       - action: asistencia_form
       - active_loop: asistencia_form
 
-  - rule: consultar requerimientos de materia
+  - rule: activar requisitos_form al solicitar requerimientos
     steps:
       - intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+
+  - rule: enviar requisitos_form y ejecutar acción
+    condition:
+      - active_loop: requisitos_form
+    steps:
+      - action: requisitos_form
+      - active_loop: null
       - action: action_consultar_requerimientos_materia
 
   # Reglas para formularios de mesas de examen
@@ -206,12 +215,6 @@ rules:
     steps:
       - action: action_consultar_requerimientos_materia
 
-  - rule: continuar consultar requerimientos tras materia
-    condition:
-      - slot_was_set:
-          - flujo_actual: consultar_requerimientos_materia
-    steps:
-      - action: action_consultar_requerimientos_materia
 
   - rule: consultar asistencia con matrícula y materia existentes
     condition:

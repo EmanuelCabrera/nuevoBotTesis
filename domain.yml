@@ -36,7 +36,6 @@ intents:
   - plazos_inscripcion
   - proporcionar_materia
   - proporcionar_materia_para_inscripcion
-  - proporcionar_materia_para_requerimientos
   - proporcionar_materia_para_mesas
   - proporcionar_matricula
   - requisitos_inscripcion
@@ -197,6 +196,9 @@ responses:
   utter_ask_asistencia_form_materia:
     - text: |
         Para consultar tu asistencia necesito saber de qué materia. Por favor, especifica la materia (por ejemplo: matematica, fisica, programacion).
+  utter_ask_requisitos_form_materia:
+    - text: |
+        Para consultar los requisitos necesito saber de qué materia. Por favor, especifica la materia.
   
   # Preguntas para formularios de mesas de examen
   utter_ask_consultar_mesas_form_materia:
@@ -242,6 +244,9 @@ forms:
   asistencia_form:
     required_slots:
       - matricula
+      - materia
+  requisitos_form:
+    required_slots:
       - materia
   consultar_mesas_form:
     required_slots:

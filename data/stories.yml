@@ -548,6 +548,10 @@ stories:
       - intent: consultar_requerimientos_materia
         entities:
           - materia: "fisica 2"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
       - action: action_consultar_requerimientos_materia
 
   - story: consultar requerimientos de materia y luego proporcionar materia
@@ -556,10 +560,19 @@ stories:
           - is_authenticated: true
           - matricula: "66007"
       - intent: consultar_requerimientos_materia
-      - action: action_consultar_requerimientos_materia
-      - intent: proporcionar_materia_para_requerimientos
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
         entities:
           - materia: "fisica 2"
+      - slot_was_set:
+          - materia: "fisica 2"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
       - action: action_consultar_requerimientos_materia
 
   - story: consultar notas y luego proporcionar materia

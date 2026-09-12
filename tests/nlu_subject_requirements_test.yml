@@ -1,0 +1,44 @@
+version: "3.1"
+
+# Dataset separado de los ejemplos de entrenamiento para caracterizar
+# consultas de requisitos y correlativas.
+nlu:
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - qué necesito para cursar [Física](materia)
+      - cuáles son las correlativas de [Análisis Matemático 2](materia)
+      - qué materias debo tener aprobadas para [Redes de Computadoras 2](materia)
+      - requisitos para poder cursar [Algoritmos 2](materia)
+      - qué pide [Física II](materia) para poder cursarla
+      - qué materias necesito antes de [Álgebra](materia)
+      - correlativas de [analisis matematico 2](materia)
+      - requisitos para cursar [fisica 2](materia)
+      - qué debo tener para cursar [Algoritmos y Estructuras I](materia)
+      - qué se necesita para [Redes de Computadoras I](materia)
+      - decime los requisitos de [Física](materia)
+      - materias previas de [Análisis Matemático II](materia)
+
+  - intent: requisitos_inscripcion
+    examples: |
+      - qué documentación necesito para ingresar a la universidad
+      - cuáles son los requisitos administrativos para inscribirme
+
+  - intent: informar_equivalencias
+    examples: |
+      - puedo pedir equivalencias de materias aprobadas en otra universidad
+      - me reconocen una materia de otra carrera
+
+  - intent: consultar_notas
+    examples: |
+      - qué nota tengo en [Física](materia)
+      - quiero ver mis calificaciones de [Redes de Computadoras II](materia)
+
+  - intent: consultar_asistencia
+    examples: |
+      - cuántas faltas tengo en [Física](materia)
+      - qué porcentaje de asistencia tengo en [Álgebra](materia)
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - cuándo es el parcial de [Física](materia)
+      - cuál es la fecha del examen de [Redes de Computadoras I](materia)

@@ -65,6 +65,10 @@ nlu:
       - hola, que documentos necesito para la inscripción
       - ¿Es necesario presentar alguna documentación para la inscripción?
       - requisitos de inscripcion
+      - qué requisitos administrativos pide la universidad para anotarme
+      - qué papeles necesito para ingresar a la institución
+      - cuáles son las condiciones de admisión de la carrera
+      - documentación obligatoria para registrarme en la facultad
   - intent: plazos_inscripcion
     examples: |
       - ¿Me puedo inscribir en cualquier momento
@@ -352,6 +356,10 @@ nlu:
       - asistencia minima necesaria para mantener la regularidad
       - minimo de asistencia que pide el reglamento universitario
       - cual es el porcentaje mínimo exigible
+      - cuál es el mínimo de asistencia que exige el reglamento
+      - qué porcentaje se necesita para conservar la regularidad
+      - cuántas inasistencias admite la normativa académica
+      - cuál es el máximo de clases que se pueden perder legalmente
       - se permite tener inasistencias durante el cursado
       - cuantos dias puedo ausentarme segun la normativa
       - cual es el piso obligatorio de asistencia
@@ -754,8 +762,31 @@ nlu:
       - necesito saber que materias debo tener para [Investigacion Operativa](materia)
       - cuales son los prerequisitos para cursar [Inteligencia Artificial 2](materia)
       - que necesito para poder cursar [Proyectos Informaticos](materia)
+      - necesito conocer las correlativas de [Física II](materia)
+      - indicame qué requisitos tiene [Redes de Computadoras II](materia)
+      - qué materias previas exige [Análisis Matemático II](materia)
+      - quiero saber qué debo aprobar antes de cursar [Algoritmos y Estructuras II](materia)
+      - requisitos académicos de [Física I](materia)
+      - qué necesito tener para inscribirme a [Álgebra y Geometría Analítica](materia)
       - que correlativas tiene [fisica](materia)
       - que correlativas tiene [fisica 2](materia)
+      - La materia para consultar requerimientos es [matematica](materia)
+      - Quiero saber los requisitos de [fisica](materia)
+      - Para consultar requerimientos, la materia es [programacion](materia)
+      - Requerimientos de [historia](materia)
+      - Quiero consultar los requisitos de [algebra](materia)
+      - La materia para consultar requerimientos es [quimica](materia)
+      - Quiero saber los requerimientos de [biologia](materia)
+      - Para consultar requerimientos, la materia es [literatura](materia)
+      - Requisitos de [filosofia](materia)
+      - Quiero consultar los requerimientos de [geografia](materia)
+      - Para consultar requerimientos, la materia es [economia](materia)
+      - Quiero saber los requisitos de [psicologia](materia)
+      - La materia para consultar requerimientos es [sociologia](materia)
+      - Quiero consultar los requisitos de [derecho](materia)
+      - Para consultar requerimientos, la materia es [contabilidad](materia)
+      - Requerimientos de [estadistica](materia)
+      - La materia para consultar requerimientos es [administracion](materia)
   - intent: consultar_fechas_parciales
     examples: |
       - quiero consultar las fechas de parciales
@@ -1153,25 +1184,6 @@ nlu:
       - Inscribirme a la mesa de [estadistica](materia)
       - La materia para la inscripción es [administracion](materia)
       - Quiero inscribirme a la mesa de [marketing](materia)
-  - intent: proporcionar_materia_para_requerimientos
-    examples: |
-      - La materia para consultar requerimientos es [matematica](materia)
-      - Quiero saber los requisitos de [fisica](materia)
-      - Para consultar requerimientos, la materia es [programacion](materia)
-      - Requerimientos de [historia](materia)
-      - Quiero consultar los requisitos de [algebra](materia)
-      - La materia para consultar requerimientos es [quimica](materia)
-      - Quiero saber los requerimientos de [biologia](materia)
-      - Para consultar requerimientos, la materia es [literatura](materia)
-      - Requisitos de [filosofia](materia)
-      - Quiero consultar los requerimientos de [geografia](materia)
-      - Para consultar requerimientos, la materia es [economia](materia)
-      - Quiero saber los requisitos de [psicologia](materia)
-      - La materia para consultar requerimientos es [sociologia](materia)
-      - Quiero consultar los requisitos de [derecho](materia)
-      - Para consultar requerimientos, la materia es [contabilidad](materia)
-      - Requerimientos de [estadistica](materia)
-      - La materia para consultar requerimientos es [administracion](materia)
   - intent: proporcionar_materia_para_mesas
     examples: |
       - La materia para consultar mesas es [matematica](materia)
