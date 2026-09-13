@@ -194,22 +194,33 @@ class ActionConsultarRequerimientosMateria(Action):
             return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
 
         try:
-            # Buscar el id de la materia por nombre
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
+            # Resolver la expresión contra el catálogo canónico completo.
+            catalog = subject_catalog.get_subjects()
+            resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
+
+            if resolution_status == "not_found":
                 dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
                 return [SlotSet("flujo_actual", None)]
 
-            materia_codigo = materia_resp.data[0]["codigo"]
+            if resolution_status == "ambiguous":
+                options = ", ".join(subject["nombre"] for subject in resolution)
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
+                    "Por favor, indica cuál necesitas."
+                )
+                return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
 
-            # Buscar los requerimientos de la materia
+            materia_codigo = resolution["codigo"]
+            materia_nombre = resolution["nombre"]
+
+            # Buscar únicamente las relaciones directas del registro canónico.
             requerimientos_resp = supabase.table("MateriaEquivalencia").select('*, Materia!MateriaEquivalencia_equivalencia_id_fkey(nombre)').eq("materia_codigo", materia_codigo).execute()
 
             if not requerimientos_resp.data:
-                dispatcher.utter_message(f"❌ No se encontraron requerimientos para la materia '{materia}'.")
+                dispatcher.utter_message(f"❌ No se encontraron requerimientos para la materia '{materia_nombre}'.")
                 return [SlotSet("flujo_actual", None)]
 
-            dispatcher.utter_message(f"📊 **Requerimientos de {materia.upper()}:**")
+            dispatcher.utter_message(f"📊 **Requerimientos de {materia_nombre.upper()}:**")
 
             for requerimiento in requerimientos_resp.data:
                 nombre_materia_equivalencia = requerimiento.get("Materia", {}).get("nombre", "Materia sin nombre")

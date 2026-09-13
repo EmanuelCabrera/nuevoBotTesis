@@ -1,0 +1,111 @@
+version: "3.1"
+
+stories:
+  - story: requisitos A - consulta explícita con materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - user: |
+          ¿Qué requisitos tiene [Física II](materia)?
+        intent: consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: requisitos B - consulta sin materia conserva el flujo
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - user: |
+          ¿Qué necesito para cursar?
+        intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: requisitos C - respuesta contextual con materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - user: |
+          ¿Qué necesito para cursar?
+        intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: requisitos D - una nueva materia reemplaza la anterior
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - user: |
+          requisitos de [Física II](materia)
+        intent: consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - user: |
+          requisitos de [Análisis Matemático II](materia)
+        intent: consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: Análisis Matemático II
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: requisitos E - materia inválida llega a la acción
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+          - materia: Materia inexistente
+      - user: |
+          requisitos de [Materia inexistente](materia)
+        intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: requisitos F - expresión ambigua requiere aclaración
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - user: |
+          requisitos de [Física](materia)
+        intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
