@@ -661,6 +661,24 @@ nlu:
       - mis calificaciones de [biologia](materia) matricula [66022](matricula)
       - notas de [literatura](materia) matricula [66031](matricula)
       - necesito ver mis calificaciones de [fisica](materia) con matricula [66022](matricula)
+      - La materia para ver mis notas es [matematica](materia)
+      - Quiero ver mis notas de [fisica](materia)
+      - Para consultar mis notas, la materia es [programacion](materia)
+      - Mis notas de [historia](materia)
+      - Quiero consultar mis notas de [algebra](materia)
+      - La materia para consultar notas es [quimica](materia)
+      - Quiero ver mis calificaciones de [biologia](materia)
+      - Para ver mis notas, la materia es [literatura](materia)
+      - Notas de [filosofia](materia)
+      - Quiero ver mis notas de [geografia](materia)
+      - Para consultar mis notas, la materia es [economia](materia)
+      - Quiero ver mis notas de [psicologia](materia)
+      - La materia para ver mis notas es [sociologia](materia)
+      - Quiero consultar mis notas de [derecho](materia)
+      - Para ver mis notas, la materia es [contabilidad](materia)
+      - Notas de [estadistica](materia)
+      - La materia para consultar notas es [administracion](materia)
+      - Quiero ver mis notas de [marketing](materia)
       - cuales son mis notas de [programacion](materia) con matricula [66031](matricula)
       - dime que notas tengo en [ingles](materia) con matricula [66001](matricula)
       - quiero saber mis calificaciones de [historia](materia) con matricula [66022](matricula)
@@ -838,37 +856,8 @@ nlu:
       - cuántas faltas tengo ahora en mi registro
       - cuántas faltas tengo este cuatrimestre
       - cuántas faltas tengo anotadas
-      - decime cuántas veces no asistí a [Física](materia)
-      - quiero saber cuántas clases me perdí en [Matemática](materia)
-      - cuántas veces falté a [Física 2](materia)
-      - mostrame las clases a las que no fui de [Redes de Computadoras 1](materia)
       - cómo está mi asistencia actual
       - cuál es mi porcentaje personal de asistencia
-      - ¿Y en [Matemática](materia)?
-      - ¿Y en [Física](materia)?
-      - ¿Y en [Programación](materia)?
-      - y en [matematica](materia)?
-      - y en [fisica](materia)?
-      - y en [programacion](materia)?
-      - y en [algebra](materia)?
-      - ahora en [Matemática](materia)
-      - ahora en [Física](materia)
-      - ahora en [matematica](materia)
-      - ahora en [fisica](materia)
-      - y para [Matemática](materia)?
-      - y para [Física](materia)?
-      - y para [matematica](materia)?
-      - también para [Física](materia)
-      - también para [Matemática](materia)
-      - qué pasa con [Física](materia)?
-      - qué pasa con [Matemática](materia)?
-      - y en [Redes de Computadoras 1](materia)?
-      - y en [Algoritmos 1](materia)?
-      - ahora consultame [Matemática](materia)
-      - ahora quiero ver [fisica](materia)
-      - cambiemos a [Matemática](materia)
-      - cambiemos a [fisica](materia)
-      - mejor consultame [algebra](materia)
   - intent: consultar_fecha_mesas_examen_final
     examples: |
       - quiero ver las fechas de examen final
@@ -1089,6 +1078,44 @@ nlu:
       - la materia es [Física 2](materia)
       - la materia es [Redes de Computadoras 1](materia)
       - la materia es [Programación Estructurada](materia)
+      - ¿Y en [Matemática](materia)?
+      - ¿Y en [Física](materia)?
+      - ¿Y en [Programación](materia)?
+      - y en [matematica](materia)?
+      - y en [fisica](materia)?
+      - y en [programacion](materia)?
+      - y en [algebra](materia)?
+      - ¿Y en [Álgebra](materia)?
+      - ahora en [Matemática](materia)
+      - ahora en [Física](materia)
+      - ahora en [matematica](materia)
+      - ahora en [fisica](materia)
+      - ahora en [Álgebra](materia)
+      - y para [Matemática](materia)?
+      - y para [Física](materia)?
+      - y para [matematica](materia)?
+      - y para [Álgebra](materia)?
+      - también para [Física](materia)
+      - también para [Matemática](materia)
+      - también de [Álgebra](materia)
+      - también de [Física](materia)
+      - qué pasa con [Física](materia)?
+      - qué pasa con [Matemática](materia)?
+      - y en [Redes de Computadoras 1](materia)?
+      - y en [Algoritmos 1](materia)?
+      - ahora consultame [Matemática](materia)
+      - ahora quiero ver [fisica](materia)
+      - cambiemos a [Matemática](materia)
+      - cambiemos a [fisica](materia)
+      - cambiemos a [álgebra](materia)
+      - mejor consultame [algebra](materia)
+      - y ahora en [fisica 3](materia)
+      - y ahora en [matematica](materia)
+      - y ahora en [analisis matematico 2](materia)
+      - ahora en [fisica 2](materia)
+      - y en [fisica 3](materia)
+      - mejor [Algebra](materia)
+      - y también [Algebra](materia)
   - intent: proporcionar_materia_para_inscripcion
     examples: |
       - La materia para inscribirme es [matematica](materia)
@@ -1109,26 +1136,6 @@ nlu:
       - Inscribirme a la mesa de [estadistica](materia)
       - La materia para la inscripción es [administracion](materia)
       - Quiero inscribirme a la mesa de [marketing](materia)
-  - intent: proporcionar_materia_para_notas
-    examples: |
-      - La materia para ver mis notas es [matematica](materia)
-      - Quiero ver mis notas de [fisica](materia)
-      - Para consultar mis notas, la materia es [programacion](materia)
-      - Mis notas de [historia](materia)
-      - Quiero consultar mis notas de [algebra](materia)
-      - La materia para consultar notas es [quimica](materia)
-      - Quiero ver mis calificaciones de [biologia](materia)
-      - Para ver mis notas, la materia es [literatura](materia)
-      - Notas de [filosofia](materia)
-      - Quiero ver mis notas de [geografia](materia)
-      - Para consultar mis notas, la materia es [economia](materia)
-      - Quiero ver mis notas de [psicologia](materia)
-      - La materia para ver mis notas es [sociologia](materia)
-      - Quiero consultar mis notas de [derecho](materia)
-      - Para ver mis notas, la materia es [contabilidad](materia)
-      - Notas de [estadistica](materia)
-      - La materia para consultar notas es [administracion](materia)
-      - Quiero ver mis notas de [marketing](materia)
   - intent: proporcionar_materia_para_requerimientos
     examples: |
       - La materia para consultar requerimientos es [matematica](materia)

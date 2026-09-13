@@ -1,0 +1,35 @@
+version: "3.1"
+
+nlu:
+  - intent: consultar_notas
+    examples: |
+      - quiero saber qué calificaciones registré
+      - necesito revisar mis resultados académicos
+      - mostrame las evaluaciones que tengo cargadas
+      - cuánto saqué en [fisica](materia)
+      - qué nota tengo en [física 2](materia)
+      - cuáles son mis notas de [análisis matemático](materia)
+      - mis calificaciones de [redes de computadoras 2](materia)
+      - notas [física](materia)
+      - calificaciones [álgebra](materia)
+      - nota de [física 2](materia)
+
+  - intent: consultar_asistencia
+    examples: |
+      - cuántas ausencias tengo en física
+      - quiero revisar mi porcentaje de asistencia
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - cuándo es la mesa de física
+      - necesito saber la fecha del examen final
+
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - qué requisitos tiene análisis matemático
+      - qué necesito para cursar redes
+
+  - intent: consultar_materias
+    examples: |
+      - qué materias tengo cursadas
+      - mostrame mis materias

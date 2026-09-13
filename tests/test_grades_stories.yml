@@ -1,0 +1,111 @@
+version: "3.1"
+
+stories:
+  - story: grades A request with subject already present
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+          - materia: "Física I"
+      - user: |
+          ¿Qué nota tengo en [Física](materia)?
+        intent: consultar_notas
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+
+  - story: grades B missing subject asks and keeps flow active
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero consultar mis calificaciones
+        intent: consultar_notas
+      - action: notas_form
+      - active_loop: notas_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: grades C subject follow-up continues grades flow
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero consultar mis calificaciones
+        intent: consultar_notas
+      - action: notas_form
+      - active_loop: notas_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [fisica](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: "fisica"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+
+  - story: grades D repeated query replaces subject
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Qué notas tengo en [Física](materia)?
+        intent: consultar_notas
+      - slot_was_set:
+          - materia: "Física"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
+      - user: |
+          ¿Y en [Álgebra](materia)?
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: "Álgebra"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+
+  - story: grades E invalid subject reaches the grades action and asks again
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_notas
+        entities:
+          - materia: "Materia inexistente"
+      - slot_was_set:
+          - materia: "Materia inexistente"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Álgebra"
+      - slot_was_set:
+          - materia: "Álgebra"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
