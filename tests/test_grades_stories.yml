@@ -64,25 +64,48 @@ stories:
           - materia: "Física"
       - action: notas_form
       - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
       - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
       - user: |
           ¿Y en [Álgebra](materia)?
-        intent: consultar_notas
+        intent: proporcionar_materia
       - slot_was_set:
           - materia: "Álgebra"
       - action: notas_form
       - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
       - action: action_consultar_notas
 
-  - story: grades E invalid subject reaches the grades action
+  - story: grades E invalid subject reaches the grades action and asks again
     steps:
       - slot_was_set:
           - is_authenticated: true
           - matricula: "66001"
+      - intent: consultar_notas
+        entities:
           - materia: "Materia inexistente"
-      - user: |
-          ¿Qué notas tengo en [Materia inexistente](materia)?
-        intent: consultar_notas
+      - slot_was_set:
+          - materia: "Materia inexistente"
       - action: notas_form
       - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
       - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Álgebra"
+      - slot_was_set:
+          - materia: "Álgebra"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null

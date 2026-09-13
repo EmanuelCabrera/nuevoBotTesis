@@ -70,7 +70,7 @@ stories:
           - materia: null
       - user: |
           ¿Y en [Matemática](materia)?
-        intent: consultar_asistencia
+        intent: proporcionar_materia
       - slot_was_set:
           - materia: Matemática
       - action: asistencia_form
