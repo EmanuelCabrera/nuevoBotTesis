@@ -56,6 +56,43 @@ consultar_requerimientos_materia
 The active form supplies the conversation context; no capability-specific subject
 follow-up intent is required.
 
+## Deferred conversational behavior: post-completion elliptical follow-ups
+
+Post-completion elliptical follow-ups are intentionally not supported as part of
+003-subject-requirements.
+
+For example:
+
+```text
+Usuario: ¿Qué requisitos tiene Física II?
+Bot:     <respuesta de requisitos>
+Usuario: ¿Y en Álgebra?
+```
+
+After the first request completes, the requirements form is no longer active and
+the previous capability context is not retained as an implicit routing signal.
+Therefore, the second message is not required to resume the requirements flow.
+
+This is an intentional scope decision, not a defect in the requirements action,
+form, subject resolver, or subject catalog. The generic `proporcionar_materia`
+intent remains limited to supplying a subject while an active form is requesting
+the `materia` slot; it is not a general post-completion continuation intent.
+
+The supported alternative is to start a new explicit request, for example:
+
+```text
+Usuario: ¿Qué requisitos tiene Álgebra?
+```
+
+Cross-capability post-completion continuation (for attendance, grades,
+requirements, and exam dates) is deferred to a future shared context-management
+design. It should be implemented consistently across capabilities rather than by
+adding requirements-specific training examples, rules, or follow-up intents.
+
+The elliptical follow-up experiments that were previously added to NLU and
+dialogue characterization were rolled back and are not acceptance coverage for
+this capability.
+
 ## Final NLU verification
 
 Verification used the compatible local environment:
