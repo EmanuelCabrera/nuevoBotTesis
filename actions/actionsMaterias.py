@@ -101,8 +101,8 @@ class ActionConsultarNotas(Action):
             resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
 
             if resolution_status == "not_found":
-                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                return [SlotSet("flujo_actual", None)]
+                dispatcher.utter_message(f"😕 No se encontró la materia '{materia}' en la base de datos. Por favor, intenta ingresando otra materia.")
+                return [SlotSet("materia", None)]
 
             if resolution_status == "ambiguous":
                 options = ", ".join(subject["nombre"] for subject in resolution)

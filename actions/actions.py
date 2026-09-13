@@ -84,8 +84,8 @@ class ActionConsultarAsistencia(Action):
                 return [SlotSet("flujo_actual", "consultar_asistencia"), SlotSet("materia", None)]
 
             if resolution != "resolved":
-                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                return [SlotSet("flujo_actual", None)]
+                dispatcher.utter_message(f"😕 No se encontró la materia '{materia}' en la base de datos. Por favor, intenta ingresando otra materia.")
+                return [SlotSet("materia", None)]
 
             materia_codigo = resolved["codigo"]
             nombre_materia = resolved["nombre"]

@@ -43,7 +43,7 @@ policies:
   enable_fallback_prediction: true
   max_history: 3
 - name: TEDPolicy
-  max_history: 3
+  max_history: 5
   epochs: 50
   batch_size: 128
   evaluate_every_number_of_epochs: 10

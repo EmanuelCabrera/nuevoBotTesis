@@ -431,16 +431,6 @@ stories:
       - action: notas_form
       - active_loop: notas_form
 
-  - story: proporcionar materia para notas
-    steps:
-      - slot_was_set:
-          - is_authenticated: true
-          - matricula: "66017"
-      - intent: proporcionar_materia
-        entities:
-          - materia: "matematica"
-      - action: notas_form
-      - active_loop: notas_form
 
   - story: múltiples consultas de notas con misma matrícula y materia
     steps:
@@ -750,16 +740,6 @@ stories:
       - action: asistencia_form
       - active_loop: asistencia_form
 
-  - story: proporcionar materia para asistencia
-    steps:
-      - slot_was_set:
-          - is_authenticated: true
-          - matricula: "66017"
-      - intent: proporcionar_materia
-        entities:
-          - materia: "matematica"
-      - action: asistencia_form
-      - active_loop: asistencia_form
 
   - story: múltiples consultas de asistencia con misma matrícula y materia
     steps:
@@ -849,3 +829,59 @@ stories:
       - active_loop: asistencia_form
       - slot_was_set:
           - flujo_actual: null
+
+  - story: consultar asistencia y luego cambiar materia con seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_asistencia
+        entities:
+          - materia: "Física"
+      - slot_was_set:
+          - materia: "Física"
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Matemática"
+      - slot_was_set:
+          - materia: "Matemática"
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+
+  - story: consultar notas y luego cambiar materia con seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_notas
+        entities:
+          - materia: "Física"
+      - slot_was_set:
+          - materia: "Física"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Álgebra"
+      - slot_was_set:
+          - materia: "Álgebra"
+      - action: notas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_notas
