@@ -36,7 +36,6 @@ intents:
   - plazos_inscripcion
   - proporcionar_materia
   - proporcionar_materia_para_inscripcion
-  - proporcionar_materia_para_mesas
   - proporcionar_matricula
   - requisitos_inscripcion
   - saludo

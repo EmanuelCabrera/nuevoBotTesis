@@ -1,0 +1,100 @@
+version: "3.1"
+
+stories:
+  - story: fechas de finales A - solicitud con materia incluida
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          ¿Cuándo es la mesa de [Física II](materia)?
+        intent: consultar_fecha_mesas_examen_final
+      - slot_was_set:
+          - materia: Física II
+      - action: consultar_mesas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_mesas_examen
+
+  - story: fechas de finales B - solicitud sin materia pide la materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          ¿Cuándo son las próximas mesas finales?
+        intent: consultar_fecha_mesas_examen_final
+      - action: consultar_mesas_form
+      - active_loop: consultar_mesas_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: fechas de finales C - frase contextual con materia completa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          ¿Cuándo son las próximas mesas finales?
+        intent: consultar_fecha_mesas_examen_final
+      - action: consultar_mesas_form
+      - active_loop: consultar_mesas_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          La materia es [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: consultar_mesas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_mesas_examen
+
+  - story: fechas de finales D - respuesta solo con materia completa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          ¿Cuándo son las próximas mesas finales?
+        intent: consultar_fecha_mesas_examen_final
+      - action: consultar_mesas_form
+      - active_loop: consultar_mesas_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: consultar_mesas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_mesas_examen
+
+  - story: fechas de finales E - nueva solicitud reemplaza la materia anterior
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          mesa final de [Física I](materia)
+        intent: consultar_fecha_mesas_examen_final
+      - slot_was_set:
+          - materia: Física I
+      - action: consultar_mesas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_mesas_examen
+      - slot_was_set:
+          - materia: null
+      - user: |
+          ¿Y cuándo es el final de [Física II](materia)?
+        intent: consultar_fecha_mesas_examen_final
+      - slot_was_set:
+          - materia: Física II
+      - action: consultar_mesas_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_mesas_examen

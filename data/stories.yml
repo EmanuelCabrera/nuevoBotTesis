@@ -493,7 +493,7 @@ stories:
       - intent: consultar_fecha_mesas_examen_final
       - action: consultar_mesas_form
       - active_loop: consultar_mesas_form
-      - intent: proporcionar_materia_para_mesas
+      - intent: proporcionar_materia
         entities:
           - materia: "matematica"
       - action: consultar_mesas_form

@@ -1,0 +1,39 @@
+version: "3.1"
+
+# Held-out 004 evaluation data. These examples are not training examples.
+nlu:
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - qué día se toma el final
+      - necesito conocer el calendario de mesas finales
+      - en qué fecha puedo presentarme a rendir
+      - cuándo será la próxima mesa
+      - qué día es la mesa de [Física II](materia)
+      - en qué fecha rindo el final de [Álgebra](materia)
+      - qué finales hay para [Redes de Computadoras 2](materia)
+      - calendario de mesas para [Análisis Matemático II](materia)
+      - cuándo toman [fisica 2](materia) en mesa final
+      - días disponibles para rendir [Algoritmos y Estructuras I](materia)
+      - próximo final de [FÍSICA III](materia)
+      - mesa examinadora de [redes de computadoras ii](materia), qué fecha tiene
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - qué día tengo el parcial de [Física](materia)
+      - fecha prevista para el segundo parcial
+      - cuándo toman el próximo parcial de [Álgebra](materia)
+      - calendario de evaluaciones parciales de [Redes de Computadoras I](materia)
+
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - anotame al final de [Física](materia)
+      - quiero reservar lugar en la mesa de [Álgebra](materia)
+      - necesito registrarme para rendir [Redes de Computadoras II](materia)
+      - cómo hago para anotarme al próximo final
+
+  - intent: proporcionar_materia
+    examples: |
+      - [Física II](materia)
+      - la materia es [Redes de Computadoras II](materia)
+      - sería [Análisis Matemático 2](materia)
+      - [fisica 2](materia)

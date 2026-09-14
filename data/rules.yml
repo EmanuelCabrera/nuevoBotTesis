@@ -132,12 +132,6 @@ rules:
       - active_loop: null
       - action: action_inscripcion_mesa_examen
 
-  - rule: consultar mesas tras proporcionar_materia_para_mesas
-    steps:
-      - intent: proporcionar_materia_para_mesas
-      - action: consultar_mesas_form
-      - active_loop: consultar_mesas_form
-
   - rule: activar fechas_parciales_form
     steps:
       - intent: consultar_fechas_parciales
