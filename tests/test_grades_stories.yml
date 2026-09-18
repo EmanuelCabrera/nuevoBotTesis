@@ -1,7 +1,7 @@
 version: "3.1"
 
 stories:
-  - story: grades A request with subject already present
+  - story: notas A - solicitud con materia incluida
     steps:
       - slot_was_set:
           - is_authenticated: true
@@ -16,7 +16,7 @@ stories:
           - requested_slot: null
       - action: action_consultar_notas
 
-  - story: grades B missing subject asks and keeps flow active
+  - story: notas B - solicitud sin materia mantiene el flujo activo
     steps:
       - slot_was_set:
           - is_authenticated: true
@@ -29,7 +29,7 @@ stories:
       - slot_was_set:
           - requested_slot: materia
 
-  - story: grades C subject follow-up continues grades flow
+  - story: notas C - respuesta con materia continúa el flujo de notas
     steps:
       - slot_was_set:
           - is_authenticated: true
@@ -52,7 +52,7 @@ stories:
           - requested_slot: null
       - action: action_consultar_notas
 
-  - story: grades D repeated query replaces subject
+  - story: notas D - nueva consulta reemplaza la materia
     steps:
       - slot_was_set:
           - is_authenticated: true
@@ -80,7 +80,7 @@ stories:
           - requested_slot: null
       - action: action_consultar_notas
 
-  - story: grades E invalid subject reaches the grades action and asks again
+  - story: notas E - materia inválida llega a la acción y solicita otra
     steps:
       - slot_was_set:
           - is_authenticated: true

@@ -11,10 +11,19 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 import httpx
 
+try:
+    from .subject_catalog import SubjectCatalogRepository
+    from .subject_resolver import SubjectResolver
+except ImportError:  # Support direct loading by the action unit-test harness.
+    from actions.subject_catalog import SubjectCatalogRepository
+    from actions.subject_resolver import SubjectResolver
+
 load_dotenv()
 url: str = os.getenv("SUPABASE_URL")
 key: str = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
+subject_catalog = SubjectCatalogRepository(lambda: supabase, ttl_seconds=600)
+subject_resolver = SubjectResolver()
 
 class ActionVerMesasExamen(Action):
 
@@ -33,20 +42,32 @@ class ActionVerMesasExamen(Action):
             return []
 
         try:
-            # 1. Buscar el código de la materia
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
+            catalog = subject_catalog.get_subjects()
+            resolution_status, resolution = subject_resolver.resolve(catalog, materia)
+
+            if resolution_status == "not_found":
                 dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
                 return []
 
-            materia_codigo = materia_resp.data[0]["codigo"]
-            nombre_materia = materia_resp.data[0]["nombre"]
+            if resolution_status == "ambiguous":
+                options = ", ".join(sorted({subject["nombre"] for subject in resolution}))
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
+                    "Por favor, especifica cuál necesitas."
+                )
+                return [
+                    SlotSet("flujo_actual", "consultar_fecha_mesas_examen_final"),
+                    SlotSet("materia", None),
+                ]
 
-            # 2. Buscar las mesas de examen con ese código de materia
+            materia_codigo = resolution["codigo"]
+            nombre_materia = resolution["nombre"]
+
+            # Buscar todas las mesas asociadas al código canónico de la materia.
             mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).execute()
             if not mesas_resp.data:
                 dispatcher.utter_message(f"📅 No se encontraron mesas de examen para la materia '{nombre_materia}'.")
-                return []
+                return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
 
             dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
             for idx, mesa in enumerate(mesas_resp.data, 1):
@@ -61,7 +82,7 @@ class ActionVerMesasExamen(Action):
                 )
             dispatcher.utter_message(f"✅ Se encontraron {len(mesas_resp.data)} mesa(s) de examen para {nombre_materia.upper()}")
             dispatcher.utter_message("💡 **Nota:** Estas son las fechas disponibles para la materia consultada.")
-            return [SlotSet("materia", None)]
+            return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
 
         except Exception as e:
             print(f"Error al consultar mesas de examen: {e}")

@@ -21,7 +21,7 @@ pipeline:
   max_ngram: 4
 # Clasificador DIET optimizado para español
 - name: DIETClassifier
-  epochs: 50
+  epochs: 75
   batch_size: 128
   evaluate_every_number_of_epochs: 10
   constrain_similarities: true

@@ -796,6 +796,12 @@ nlu:
       - cuando tengo parciales
       - fechas de los examenes parciales
       - quiero consultar parciales
+      - cronograma de evaluaciones parciales
+      - qué fechas tienen las evaluaciones parciales de [Física II](materia)
+      - días de evaluaciones parciales para [Redes de Computadoras I](materia)
+      - cuándo es el parcial de [Redes de Computadoras II](materia), por favor
+      - fecha del parcial de [Algoritmos y Estructuras II](materia): necesito confirmarla
+      - cronograma de evaluaciones parciales de [Redes de Computadoras II](materia), necesito la fecha
   - intent: consultar_asistencia
     examples: |
       - quiero consultar mi asistencia
@@ -1003,6 +1009,44 @@ nlu:
       - fechas de mesa de rendir examenes de [administracion](materia)
       - fechas de mesa de rendir final de [marketing](materia)
       - fechas de mesa de rendir finales de [matematica](materia)
+      - La materia para consultar mesas es [matematica](materia)
+      - Quiero ver las mesas de [fisica](materia)
+      - Para consultar mesas, la materia es [programacion](materia)
+      - Mesas de [historia](materia)
+      - Quiero consultar las mesas de [algebra](materia)
+      - La materia para consultar mesas es [quimica](materia)
+      - Quiero ver las mesas de [biologia](materia)
+      - Para ver las mesas, la materia es [literatura](materia)
+      - Mesas de [filosofia](materia)
+      - Quiero ver las mesas de [geografia](materia)
+      - Para consultar mesas, la materia es [economia](materia)
+      - Quiero ver las mesas de [psicologia](materia)
+      - La materia para ver las mesas es [sociologia](materia)
+      - Quiero consultar las mesas de [derecho](materia)
+      - Para ver las mesas, la materia es [contabilidad](materia)
+      - Mesas de [estadistica](materia)
+      - La materia para consultar mesas es [administracion](materia)
+      - Quiero ver las mesas de [marketing](materia)
+      - qué día se rinde el final de [Física III](materia)
+      - decime el calendario disponible para las mesas de [Álgebra](materia)
+      - en qué fecha está programada la mesa de [Redes de Computadoras II](materia)
+      - cuáles son los días de final para [Análisis Matemático I](materia)
+      - próximo examen final para [Redes de Computadoras I](materia)
+      - próxima mesa disponible de [Física II](materia)
+      - quiero consultar el próximo final de [Álgebra](materia)
+      - cuándo se toma la mesa de [redes de computadoras ii](materia), necesito la fecha
+      - qué día es el final de [Algoritmos y Estructuras II](materia)?
+      - mesa de [Álgebra y Geometría Analítica](materia): cuándo se realiza
+      - para [Análisis Matemático II](materia), cuáles son las fechas de final
+      - necesito el día de la mesa de [Redes de Computadoras I](materia), por favor
+      - mesa examinadora de [Redes de Computadoras I](materia), cuándo se reúne
+      - necesito la fecha de la mesa examinadora de [Redes de Computadoras II](materia)
+      - qué día se reúne la mesa examinadora de [Redes de Computadoras I](materia)?
+      - la mesa examinadora de [Redes de Computadoras II](materia), qué día está prevista
+      - cuándo se reúne la mesa examinadora de [Redes de Computadoras I](materia)
+      - mesa examinadora de [Lengua y Comunicación](materia), qué fecha tiene
+      - qué día es la mesa de [Lengua y Comunicación](materia)
+      - una mesa examinadora, qué fecha tiene
   - intent: proporcionar_materia
     examples: |
       - [matematica](materia)
@@ -1147,6 +1191,7 @@ nlu:
       - y en [fisica 3](materia)
       - mejor [Algebra](materia)
       - y también [Algebra](materia)
+      - [Lengua y Comunicación](materia)
   - intent: proporcionar_materia_para_inscripcion
     examples: |
       - La materia para inscribirme es [matematica](materia)
@@ -1167,26 +1212,6 @@ nlu:
       - Inscribirme a la mesa de [estadistica](materia)
       - La materia para la inscripción es [administracion](materia)
       - Quiero inscribirme a la mesa de [marketing](materia)
-  - intent: proporcionar_materia_para_mesas
-    examples: |
-      - La materia para consultar mesas es [matematica](materia)
-      - Quiero ver las mesas de [fisica](materia)
-      - Para consultar mesas, la materia es [programacion](materia)
-      - Mesas de [historia](materia)
-      - Quiero consultar las mesas de [algebra](materia)
-      - La materia para consultar mesas es [quimica](materia)
-      - Quiero ver las mesas de [biologia](materia)
-      - Para ver las mesas, la materia es [literatura](materia)
-      - Mesas de [filosofia](materia)
-      - Quiero ver las mesas de [geografia](materia)
-      - Para consultar mesas, la materia es [economia](materia)
-      - Quiero ver las mesas de [psicologia](materia)
-      - La materia para ver las mesas es [sociologia](materia)
-      - Quiero consultar las mesas de [derecho](materia)
-      - Para ver las mesas, la materia es [contabilidad](materia)
-      - Mesas de [estadistica](materia)
-      - La materia para consultar mesas es [administracion](materia)
-      - Quiero ver las mesas de [marketing](materia)
   - intent: inscribirse_mesa_examen
     examples: |
       - Quiero inscribirme a una mesa de examen
@@ -1242,6 +1267,15 @@ nlu:
       - Quiero inscribirme a la mesa de examen de [inteligencia artificial 2](materia)
       - Quiero inscribirme a la mesa de examen de [proyectos informaticos](materia)
       - Quiero inscribirme a la mesa de examen de [inteligencia artificial 1](materia)
+      - anotame para rendir [Física II](materia)
+      - necesito reservar una vacante en el final de [Álgebra](materia)
+      - registrame en la mesa de [Redes de Computadoras II](materia)
+      - quiero asegurar mi lugar para rendir [Análisis Matemático I](materia)
+      - deseo anotarme al examen final de [Física III](materia)
+      - necesito hacer la inscripción para la mesa de [Algoritmos y Estructuras II](materia)
+      - quiero registrarme para presentar el final de [Álgebra](materia)
+      - necesito hacer el registro para rendir [Física II](materia)
+      - dónde me registro para dar el examen final de [Redes de Computadoras I](materia)
   - intent: seleccionar_mesa_examen
     examples: |
       - [cod1001](codigo_mesa_examen)
