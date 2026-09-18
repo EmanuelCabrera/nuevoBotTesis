@@ -1,0 +1,53 @@
+version: "3.1"
+
+nlu:
+  - intent: consultar_fechas_parciales
+    examples: |
+      - ¿qué día se toma el parcial de [Física II](materia)?
+      - necesito revisar la fecha del parcial de [Álgebra y Geometría Analítica](materia)
+      - ¿cuándo rindo los parciales de [Redes de Computadoras II](materia)?
+      - pasame el calendario de parciales de [Algoritmos y Estructuras II](materia)
+      - fechas de evaluaciones parciales para [Análisis Matemático II](materia)
+      - ¿qué fecha tiene el parcial de [Física](materia)?
+      - quiero saber cuándo son los parciales de [Lengua y Comunicación](materia)
+      - ¿cuándo empiezan los parciales?
+      - necesito consultar el cronograma parcial
+      - ¿qué días hay evaluaciones parciales?
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - [Redes de Computadoras I](materia), ¿cuándo es el parcial?
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - ¿cuándo es la mesa de [Física II](materia)?
+      - ¿qué fecha tiene el final de [Álgebra](materia)?
+      - calendario de mesas para [Redes de Computadoras II](materia)
+      - ¿cuándo rindo el final de [Análisis Matemático II](materia)?
+
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - quiero anotarme al final de [Física](materia)
+      - inscribime a la mesa de [Álgebra](materia)
+      - reservame un lugar para rendir [Redes de Computadoras II](materia)
+
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - ¿qué correlativas tiene [Física II](materia)?
+      - ¿qué necesito para cursar [Redes de Computadoras II](materia)?
+
+  - intent: consultar_notas
+    examples: |
+      - ¿qué nota saqué en [Física II](materia)?
+      - mostrame mis calificaciones de [Álgebra](materia)
+
+  - intent: consultar_asistencia
+    examples: |
+      - ¿cuántas faltas tengo en [Física II](materia)?
+      - ¿qué porcentaje de asistencia tengo en [Redes de Computadoras I](materia)?
+
+  - intent: proporcionar_materia
+    examples: |
+      - [Física II](materia)
+      - la materia es [Redes de Computadoras II](materia)
+      - [Álgebra y Geometría Analítica](materia)

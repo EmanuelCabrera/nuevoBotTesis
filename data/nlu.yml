@@ -802,6 +802,9 @@ nlu:
       - cuándo es el parcial de [Redes de Computadoras II](materia), por favor
       - fecha del parcial de [Algoritmos y Estructuras II](materia): necesito confirmarla
       - cronograma de evaluaciones parciales de [Redes de Computadoras II](materia), necesito la fecha
+      - necesito confirmar la fecha del parcial de [Álgebra y Geometría Analítica](materia)
+      - ¿qué día se rinde el parcial de [Análisis Matemático II](materia)?
+      - calendario de parciales para [Redes de Computadoras I](materia)
   - intent: consultar_asistencia
     examples: |
       - quiero consultar mi asistencia
