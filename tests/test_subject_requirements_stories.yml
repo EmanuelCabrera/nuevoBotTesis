@@ -81,20 +81,35 @@ stories:
           - requested_slot: null
       - action: action_consultar_requerimientos_materia
 
-  - story: requisitos E - materia inválida llega a la acción
+  - story: requisitos E - materia inválida llega a la acción y repregunta
     steps:
       - slot_was_set:
           - is_authenticated: true
           - matricula: "66007"
-          - materia: Materia inexistente
-      - user: |
-          requisitos de [Materia inexistente](materia)
-        intent: consultar_requerimientos_materia
+      - intent: consultar_requerimientos_materia
+        entities:
+          - materia: "Materia inexistente"
+      - slot_was_set:
+          - materia: "Materia inexistente"
       - action: requisitos_form
       - active_loop: null
       - slot_was_set:
           - requested_slot: null
       - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - slot_was_set:
+          - materia: "Física II"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
 
   - story: requisitos F - expresión ambigua requiere aclaración
     steps:

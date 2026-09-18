@@ -565,6 +565,33 @@ stories:
           - requested_slot: null
       - action: action_consultar_requerimientos_materia
 
+  - story: consultar requerimientos y luego cambiar materia con seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - intent: consultar_requerimientos_materia
+        entities:
+          - materia: "Física"
+      - slot_was_set:
+          - materia: "Física"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Álgebra"
+      - slot_was_set:
+          - materia: "Álgebra"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
   - story: consultar notas y luego proporcionar materia
     steps:
       - slot_was_set:
