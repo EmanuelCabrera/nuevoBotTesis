@@ -1192,26 +1192,7 @@ nlu:
       - mejor [Algebra](materia)
       - y también [Algebra](materia)
       - [Lengua y Comunicación](materia)
-  - intent: proporcionar_materia_para_inscripcion
-    examples: |
-      - La materia para inscribirme es [matematica](materia)
-      - Quiero inscribirme a la mesa de [fisica](materia)
-      - Me quiero anotar a la mesa de [programacion](materia)
-      - Para la inscripción, la materia es [historia](materia)
-      - Inscribirme a la mesa de [algebra](materia)
-      - La materia para la inscripción es [quimica](materia)
-      - Quiero inscribirme a la mesa de [biologia](materia)
-      - Para inscribirme, la materia es [literatura](materia)
-      - Me gustaría inscribirme a la mesa de [filosofia](materia)
-      - Inscribirme a la mesa de [geografia](materia)
-      - Para la inscripción, la materia es [economia](materia)
-      - Quiero inscribirme a la mesa de [psicologia](materia)
-      - La materia para inscribirme es [sociologia](materia)
-      - Me quiero anotar a la mesa de [derecho](materia)
-      - Para inscribirme, la materia es [contabilidad](materia)
-      - Inscribirme a la mesa de [estadistica](materia)
-      - La materia para la inscripción es [administracion](materia)
-      - Quiero inscribirme a la mesa de [marketing](materia)
+      - sería [Análisis Matemático II](materia)
   - intent: inscribirse_mesa_examen
     examples: |
       - Quiero inscribirme a una mesa de examen
@@ -1276,6 +1257,26 @@ nlu:
       - quiero registrarme para presentar el final de [Álgebra](materia)
       - necesito hacer el registro para rendir [Física II](materia)
       - dónde me registro para dar el examen final de [Redes de Computadoras I](materia)
+      - quiero dar de alta mi registro para rendir el final de [Física I](materia)
+      - quiero reservar una mesa para presentarme al final de [Álgebra](materia)
+      - La materia para inscribirme es [matematica](materia)
+      - Quiero inscribirme a la mesa de [fisica](materia)
+      - Me quiero anotar a la mesa de [programacion](materia)
+      - Para la inscripción, la materia es [historia](materia)
+      - Inscribirme a la mesa de [algebra](materia)
+      - La materia para la inscripción es [quimica](materia)
+      - Quiero inscribirme a la mesa de [biologia](materia)
+      - Para inscribirme, la materia es [literatura](materia)
+      - Me gustaría inscribirme a la mesa de [filosofia](materia)
+      - Inscribirme a la mesa de [geografia](materia)
+      - Para la inscripción, la materia es [economia](materia)
+      - Quiero inscribirme a la mesa de [psicologia](materia)
+      - La materia para inscribirme es [sociologia](materia)
+      - Me quiero anotar a la mesa de [derecho](materia)
+      - Para inscribirme, la materia es [contabilidad](materia)
+      - Inscribirme a la mesa de [estadistica](materia)
+      - La materia para la inscripción es [administracion](materia)
+      - Quiero inscribirme a la mesa de [marketing](materia)
   - intent: seleccionar_mesa_examen
     examples: |
       - [cod1001](codigo_mesa_examen)
@@ -1324,6 +1325,10 @@ nlu:
       - Cambié de opinión, quiero cancelar mi inscripción
       - Ya no puedo rendir, cancelar inscripción
       - Tengo que cancelar mi inscripción a la mesa
+      - ya no voy a presentarme al final de [Redes de Computadoras II](materia)
+      - no voy a rendir el final de [Física I](materia), quiero cancelar
+      - ya no voy a presentarme al examen final de [Álgebra](materia), quiero cancelar
+      - decidí no rendir la mesa de [Redes de Computadoras II](materia) y dar de baja la inscripción
       - ¿Puedo cancelar mi inscripción a la mesa de examen?
       - ¿Cómo cancelo mi inscripción a la mesa?
       - Dar de baja inscripción

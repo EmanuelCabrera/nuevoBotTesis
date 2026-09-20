@@ -25,6 +25,30 @@ supabase: Client = create_client(url, key)
 subject_catalog = SubjectCatalogRepository(lambda: supabase, ttl_seconds=600)
 subject_resolver = SubjectResolver()
 
+
+def _registration_retry_events(clear_mesa=True):
+    events = []
+    if clear_mesa:
+        events.extend([SlotSet("codigo_mesa_examen", None), SlotSet("fecha_mesa", None)])
+    events.append(SlotSet("flujo_actual", "inscripcion_mesa_examen"))
+    return events
+
+
+def _resolve_registration_subject(materia):
+    catalog = subject_catalog.get_subjects()
+    return subject_resolver.resolve(catalog, materia)
+
+
+def _subject_resolution_message(dispatcher, materia, status, resolution):
+    if status == "not_found":
+        dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
+    elif status == "ambiguous":
+        options = ", ".join(sorted({subject["nombre"] for subject in resolution}))
+        dispatcher.utter_message(
+            f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
+            "Por favor, especifica cuál necesitas."
+        )
+
 class ActionVerMesasExamen(Action):
 
     def name(self):
@@ -110,17 +134,18 @@ class ActionOfrecerMesasExamen(Action):
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime a qué materia quieres inscribirte para la mesa de examen.")
             return [SlotSet("flujo_actual", "inscripcion_mesa_examen")]
         try:
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
-                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                return []
-            materia_codigo = materia_resp.data[0]["codigo"]
-            nombre_materia = materia_resp.data[0]["nombre"]
+            resolution_status, resolution = _resolve_registration_subject(materia)
+            if resolution_status != "resolved":
+                _subject_resolution_message(dispatcher, materia, resolution_status, resolution)
+                return [SlotSet("materia", None), SlotSet("flujo_actual", "inscripcion_mesa_examen")]
+
+            materia_codigo = resolution["codigo"]
+            nombre_materia = resolution["nombre"]
 
             mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).order("fecha", desc=False).execute()
             if not mesas_resp.data:
                 dispatcher.utter_message(f"📅 No se encontraron mesas de examen para la materia '{nombre_materia}'.")
-                return []
+                return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
 
             dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
             mesas_list = []
@@ -140,16 +165,14 @@ class ActionOfrecerMesasExamen(Action):
         except Exception as e:
             print(f"Error al ofrecer mesas de examen: {e}")
             dispatcher.utter_message("❌ Hubo un error al consultar las mesas de examen. Por favor, intenta nuevamente más tarde.")
-        return []
+            return _registration_retry_events(clear_mesa=False)
+        return _registration_retry_events(clear_mesa=False)
 
 # Modificar ActionInscripcionMesaExamen para solo inscribir si ya hay código de mesa seleccionado
 def _find_mesa_by_codigo(codigo_mesa):
-    try:
-        mesa_response = supabase.table("MesaExamen").select('fecha, Materia(nombre)').eq("codigo", codigo_mesa).execute()
-        if mesa_response.data:
-            return mesa_response.data[0]
-    except Exception as e:
-        print(f"Error buscando mesa por código: {e}")
+    mesa_response = supabase.table("MesaExamen").select('fecha, materia_codigo, Materia(nombre)').eq("codigo", codigo_mesa).execute()
+    if mesa_response.data:
+        return mesa_response.data[0]
     return None
 
 class ActionInscripcionMesaExamen(Action):
@@ -167,34 +190,50 @@ class ActionInscripcionMesaExamen(Action):
         materia = tracker.get_slot('materia')
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder inscribirte a la mesa de examen.")
-            return []
+            return _registration_retry_events()
         # Si no hay código pero sí fecha, buscar el código de la mesa para esa fecha y materia
         if not codigo_mesa and fecha_mesa and materia:
             try:
-                materia_resp = supabase.table("Materia").select("codigo").ilike("nombre", "%" + materia + "%").execute()
-                if not materia_resp.data:
-                    dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                    return []
-                materia_codigo = materia_resp.data[0]["codigo"]
+                resolution_status, resolution = _resolve_registration_subject(materia)
+                if resolution_status != "resolved":
+                    _subject_resolution_message(dispatcher, materia, resolution_status, resolution)
+                    return [SlotSet("materia", None)] + _registration_retry_events()
+                materia_codigo = resolution["codigo"]
                 mesa_resp = supabase.table("MesaExamen").select('codigo').eq("materia_codigo", materia_codigo).eq("fecha", fecha_mesa).execute()
                 if not mesa_resp.data:
-                    dispatcher.utter_message(f"❌ No se encontró una mesa de examen para la materia '{materia}' en la fecha '{fecha_mesa}'.")
-                    return []
+                    dispatcher.utter_message(f"❌ No se encontró una mesa de examen para la materia '{resolution['nombre']}' en la fecha '{fecha_mesa}'.")
+                    return _registration_retry_events()
                 codigo_mesa = mesa_resp.data[0]["codigo"]
             except Exception as e:
                 print(f"Error buscando mesa por fecha: {e}")
                 dispatcher.utter_message("❌ Hubo un error al buscar la mesa de examen por fecha. Por favor, intenta nuevamente más tarde.")
-                return []
+                return _registration_retry_events()
         if not codigo_mesa:
             dispatcher.utter_message("❌ No tengo el código de la mesa de examen. Por favor, selecciona una mesa de examen para inscribirte (puedes consultarlas primero).")
-            return []
+            return _registration_retry_events()
         try:
+            resolved_subject = None
+            if materia:
+                resolution_status, resolution = _resolve_registration_subject(materia)
+                if resolution_status != "resolved":
+                    _subject_resolution_message(dispatcher, materia, resolution_status, resolution)
+                    return [SlotSet("materia", None)] + _registration_retry_events()
+                resolved_subject = resolution
+
             mesa_info = _find_mesa_by_codigo(codigo_mesa)
             if not mesa_info:
                 dispatcher.utter_message(f"❌ No se encontró una mesa de examen con el código '{codigo_mesa}'.")
-                return []
+                return _registration_retry_events()
             nombre_materia = mesa_info.get("Materia", {}).get("nombre", "Materia sin nombre")
             fecha_mesa_final = mesa_info.get("fecha", "Fecha no disponible")
+
+            if resolved_subject:
+                if mesa_info.get("materia_codigo") != resolved_subject["codigo"]:
+                    dispatcher.utter_message(
+                        f"❌ La mesa seleccionada no corresponde a la materia '{resolved_subject['nombre']}'. "
+                        "Por favor, selecciona una mesa de esa materia."
+                    )
+                    return _registration_retry_events()
             # Verificar si ya está inscrito
             inscripcion_existente = supabase.table("Inscripcion").select('*').eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
             if inscripcion_existente.data:
@@ -223,7 +262,8 @@ class ActionInscripcionMesaExamen(Action):
         except Exception as e:
             print(f"Error al inscribir a mesa de examen: {e}")
             dispatcher.utter_message("❌ Hubo un error al procesar tu inscripción. Por favor, intenta nuevamente más tarde.")
-        return []
+            return _registration_retry_events()
+        return _registration_retry_events()
 
 class ActionCancelarInscripcionMesa(Action):
 

@@ -646,7 +646,7 @@ stories:
           - matricula: "66001"
       - action: inscripcion_mesa_form
       - active_loop: inscripcion_mesa_form
-      - intent: proporcionar_materia_para_inscripcion
+      - intent: proporcionar_materia
         entities:
           - materia: "fisica"
       - action: inscripcion_mesa_form

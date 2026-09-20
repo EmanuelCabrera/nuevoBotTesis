@@ -146,12 +146,6 @@ rules:
       - active_loop: null
       - action: action_consultar_fechas_parciales
 
-  - rule: continuar inscripción tras proporcionar materia para inscripción
-    steps:
-      - intent: proporcionar_materia_para_inscripcion
-      - action: inscripcion_mesa_form
-      - active_loop: inscripcion_mesa_form
-
   - rule: activar cancelar_mesa_form al solicitar cancelación
     steps:
       - intent: cancelar_inscripcion_mesa_examen

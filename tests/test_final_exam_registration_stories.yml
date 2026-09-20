@@ -1,0 +1,85 @@
+version: "3.1"
+
+stories:
+  - story: inscripción A - solicitud explícita con materia y matrícula
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero inscribirme al final de [Física II](materia)
+        intent: inscribirse_mesa_examen
+      - slot_was_set:
+          - materia: Física II
+      - action: inscripcion_mesa_form
+      - active_loop: null
+      - action: action_ofrecer_mesas_examen
+      - action: seleccionar_mesa_form
+      - active_loop: seleccionar_mesa_form
+
+  - story: inscripción B - solicitud sin datos activa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          Quiero anotarme a una mesa de examen
+        intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - requested_slot: matricula
+
+  - story: inscripción C - follow-up genérico de materia durante el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero inscribirme a una mesa
+        intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          La materia para inscribirme es [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: inscripcion_mesa_form
+      - active_loop: null
+      - action: action_ofrecer_mesas_examen
+      - action: seleccionar_mesa_form
+      - active_loop: seleccionar_mesa_form
+
+  - story: inscripción D - selección de mesa por fecha
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+          - materia: Física II
+      - active_loop: seleccionar_mesa_form
+      - slot_was_set:
+          - requested_slot: fecha_mesa
+      - user: |
+          Elijo la mesa del [2025-08-25](fecha_mesa)
+        intent: seleccionar_mesa_examen
+      - action: seleccionar_mesa_form
+      - active_loop: null
+      - action: action_inscripcion_mesa_examen
+
+  - story: inscripción E - selección de mesa por código
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+          - materia: Física II
+      - active_loop: seleccionar_mesa_form
+      - slot_was_set:
+          - requested_slot: fecha_mesa
+      - user: |
+          Selecciono la mesa [cod1002](codigo_mesa_examen)
+        intent: seleccionar_mesa_examen
+      - action: seleccionar_mesa_form
+      - active_loop: null
+      - action: action_inscripcion_mesa_examen
