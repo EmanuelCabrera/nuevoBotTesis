@@ -1,0 +1,75 @@
+version: "3.1"
+
+stories:
+  - story: cancelación A - solicitud con materia y matrícula
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero cancelar mi inscripción al final de [Física II](materia)
+        intent: cancelar_inscripcion_mesa_examen
+      - slot_was_set:
+          - materia: Física II
+      - action: cancelar_mesa_form
+      - active_loop: null
+      - action: action_cancelar_inscripcion_mesa_examen
+
+  - story: cancelación B - solicitud sin materia activa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero cancelar una inscripción a una mesa
+        intent: cancelar_inscripcion_mesa_examen
+      - action: cancelar_mesa_form
+      - active_loop: cancelar_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: cancelación C - seguimiento genérico de materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero cancelar una inscripción
+        intent: cancelar_inscripcion_mesa_examen
+      - action: cancelar_mesa_form
+      - active_loop: cancelar_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: cancelar_mesa_form
+      - active_loop: null
+      - action: action_cancelar_inscripcion_mesa_examen
+
+  - story: cancelación D - solicitud de otra materia explícita
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Cancelá mi inscripción de [Álgebra](materia)
+        intent: cancelar_inscripcion_mesa_examen
+      - slot_was_set:
+          - materia: Álgebra
+      - action: cancelar_mesa_form
+      - active_loop: null
+      - action: action_cancelar_inscripcion_mesa_examen
+
+  - story: cancelación E - no se mezcla con inscripción
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Quiero inscribirme al final de [Física II](materia)
+        intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form

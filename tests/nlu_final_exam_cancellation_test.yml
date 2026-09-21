@@ -1,0 +1,35 @@
+version: "3.1"
+nlu:
+  - intent: cancelar_inscripcion_mesa_examen
+    examples: |
+      - quiero cancelar mi inscripción al final de [Física II](materia)
+      - necesito dar de baja la mesa de [Álgebra y Geometría Analítica](materia)
+      - ya no voy a rendir el final de [Redes de Computadoras II](materia)
+      - desanotame de la mesa de [Análisis Matemático II](materia)
+      - quiero anular mi inscripción para [Algoritmos y Estructuras II](materia)
+      - decidí no presentarme al examen final de [Lengua y Comunicación](materia)
+      - cancelá mi registro de la mesa de [Física I](materia)
+      - quiero dar de baja una inscripción a una mesa
+
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - quiero anotarme al final de [Física II](materia)
+      - inscribime a la mesa de [Álgebra](materia)
+      - necesito reservar un lugar para rendir [Redes de Computadoras I](materia)
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - cuándo es la mesa de [Física II](materia)
+      - qué fecha tiene el final de [Álgebra](materia)
+      - calendario de mesas para [Redes de Computadoras II](materia)
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - cuándo es el parcial de [Física](materia)
+      - qué fecha tiene el parcial de [Redes de Computadoras II](materia)
+
+  - intent: proporcionar_materia
+    examples: |
+      - [Física II](materia)
+      - la materia es [Álgebra y Geometría Analítica](materia)
+      - la materia es [Redes de Computadoras II](materia)

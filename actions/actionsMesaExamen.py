@@ -34,6 +34,18 @@ def _registration_retry_events(clear_mesa=True):
     return events
 
 
+def _cancellation_retry_events(clear_subject=False):
+    events = []
+    if clear_subject:
+        events.append(SlotSet("materia", None))
+    events.append(SlotSet("flujo_actual", "cancelar_inscripcion_mesa_examen"))
+    return events
+
+
+def _cancellation_complete_events():
+    return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+
+
 def _resolve_registration_subject(materia):
     catalog = subject_catalog.get_subjects()
     return subject_resolver.resolve(catalog, materia)
@@ -271,64 +283,72 @@ class ActionCancelarInscripcionMesa(Action):
         return "action_cancelar_inscripcion_mesa_examen"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
+        is_authenticated = tracker.get_slot('is_authenticated')
         materia = tracker.get_slot('materia')
         matricula = tracker.get_slot('matricula')
-        
+
+        if not is_authenticated:
+            dispatcher.utter_message(
+                "❌ Necesitas estar autenticado para cancelar una inscripción a una mesa de examen. "
+                "Por favor, inicia sesión primero."
+            )
+            return []
+
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder cancelar la inscripción.")
-            return []
-        
+            return _cancellation_retry_events()
+
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres cancelar la inscripción.")
-            return []
-        
+            return _cancellation_retry_events()
+
         try:
-            # Primero buscar el código de la materia
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
-                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                return []
-            
-            materia_codigo = materia_resp.data[0]["codigo"]
-            nombre_materia = materia_resp.data[0]["nombre"]
-            
-            # Buscar las mesas de examen para esa materia específica
+            resolution_status, resolution = _resolve_registration_subject(materia)
+            if resolution_status != "resolved":
+                _subject_resolution_message(
+                    dispatcher, materia, resolution_status, resolution
+                )
+                return _cancellation_retry_events(clear_subject=True)
+
+            materia_codigo = resolution["codigo"]
+            nombre_materia = resolution["nombre"]
+
             mesa_response = supabase.table("MesaExamen").select('codigo').eq("materia_codigo", materia_codigo).execute()
-            
-            print(f"Mesas encontradas para {nombre_materia}: {mesa_response.data}")
+
             if not mesa_response.data:
-                dispatcher.utter_message(f"❌ No se encontraron mesas de examen para la materia '{materia}'.")
-                return []
-            
-            # Buscar todas las inscripciones del estudiante para las mesas de esa materia
+                dispatcher.utter_message(f"❌ No se encontraron mesas de examen para la materia '{nombre_materia}'.")
+                return _cancellation_complete_events()
+
             inscripciones_canceladas = 0
+            mesas_canceladas = []
             for mesa in mesa_response.data:
                 codigo_mesa = mesa.get("codigo")
-                
-                # Buscar la inscripción específica
+
                 inscripcion_response = supabase.table("Inscripcion").select('*').eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
-                
-                print(inscripcion_response.data)
+
                 if inscripcion_response.data:
-                    # Eliminar la inscripción
                     delete_response = supabase.table("Inscripcion").delete().eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
-                    
+
                     if delete_response.data:
-                        inscripciones_canceladas += 1
-                        dispatcher.utter_message(f"✅ Tu inscripción a la mesa de examen de {nombre_materia} (código: {codigo_mesa}) ha sido cancelada exitosamente.")
-            
+                        inscripciones_canceladas += len(delete_response.data)
+                        mesas_canceladas.append(codigo_mesa)
+
+            for codigo_mesa in mesas_canceladas:
+                dispatcher.utter_message(f"✅ Tu inscripción a la mesa de examen de {nombre_materia} (código: {codigo_mesa}) ha sido cancelada exitosamente.")
+
             if inscripciones_canceladas == 0:
-                dispatcher.utter_message(f"❌ No se encontró una inscripción activa para la matrícula {matricula} en ninguna mesa de examen de la materia '{materia}'.")
+                dispatcher.utter_message(f"❌ No se encontró una inscripción activa para la matrícula {matricula} en ninguna mesa de examen de la materia '{nombre_materia}'.")
             elif inscripciones_canceladas == 1:
                 dispatcher.utter_message("✅ Cancelación completada.")
             else:
                 dispatcher.utter_message(f"✅ Se cancelaron {inscripciones_canceladas} inscripciones.")
-                
+
+            return _cancellation_complete_events()
+
         except Exception as e:
             print(f"Error al cancelar inscripción: {e}")
             dispatcher.utter_message("❌ Hubo un error al procesar la cancelación. Por favor, intenta nuevamente más tarde.")
-        
-        return []
+            return _cancellation_retry_events()
 
 class ValidateSeleccionarMesaForm(FormValidationAction):
     def name(self) -> Text:
