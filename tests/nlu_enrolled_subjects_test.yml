@@ -1,0 +1,54 @@
+version: "3.1"
+
+nlu:
+  - intent: consultar_materias
+    examples: |
+      - qué materias cursé
+      - mostrame mis materias cursadas
+      - qué materias figuran como cursadas
+      - consultar mis materias cursadas
+      - qué materias aparecen en mi historial de cursadas
+      - qué materias tengo
+      - mostrame mis materias
+      - cuáles son mis materias
+      - qué materias cursé con mi matrícula [66017](matricula)
+      - materias cursadas para la matrícula [66007](matricula)
+
+  - intent: consultar_notas
+    examples: |
+      - qué notas tengo
+      - mostrame mis notas de [Física](materia)
+      - cuáles son mis calificaciones
+      - cuánto saqué en [Álgebra](materia)
+
+  - intent: consultar_asistencia
+    examples: |
+      - cuántas faltas tengo
+      - cómo voy de asistencia en [Física](materia)
+      - mostrame mis ausencias
+
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - qué requisitos tiene [Física II](materia)
+      - qué materias necesito aprobar para cursar [Redes de Computadoras II](materia)
+
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - quiero inscribirme al final de [Física II](materia)
+      - anotame a la mesa de [Álgebra](materia)
+
+  - intent: cancelar_inscripcion_mesa_examen
+    examples: |
+      - quiero cancelar mi inscripción al final de [Física II](materia)
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - cuándo es el final de [Física II](materia)
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - cuándo es el parcial de [Física II](materia)
+
+  - intent: out_of_scope
+    examples: |
+      - a qué finales estoy inscripto

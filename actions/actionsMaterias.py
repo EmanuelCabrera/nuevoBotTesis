@@ -31,38 +31,52 @@ class ActionConsultarMaterias(Action):
         is_authenticated = tracker.get_slot('is_authenticated')
 
         if not is_authenticated:
-            dispatcher.utter_message("❌ Necesitas estar autenticado para consultar tus materias. Por favor, inicia sesión primero.")
-            return []
+            dispatcher.utter_message("❌ Necesitas estar autenticado para consultar tus materias cursadas. Por favor, inicia sesión primero.")
+            return [SlotSet("flujo_actual", None)]
 
         # Obtener la matrícula del slot
         matricula = tracker.get_slot('matricula')
 
         if not matricula:
-            dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus materias.")
+            dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus materias cursadas.")
             return [SlotSet("flujo_actual", "consultar_materias")]
 
         try:
             response = supabase.table("MateriaCursada").select('fecha_cursada, Materia(nombre)').eq("estudiante", matricula).execute()
 
             if not response.data:
-                dispatcher.utter_message(f"📚 No se encontraron materias cursadas para la matrícula {matricula}.")
+                dispatcher.utter_message(
+                    f"📚 No se encontraron registros de materias cursadas para la matrícula {matricula}."
+                )
                 return [SlotSet("flujo_actual", None)]
 
-            dispatcher.utter_message(f"📚 **Materias cursadas para la matrícula {matricula}:**")
+            course_records = sorted(
+                response.data,
+                key=lambda record: (
+                    record.get("fecha_cursada") or "",
+                    ((record.get("Materia") or {}).get("nombre") or "").casefold(),
+                ),
+            )
 
-            for materia in response.data:
-                nombre_materia = materia.get("Materia", {}).get("nombre", "Materia sin nombre")
-                fecha_cursada = materia.get("fecha_cursada", "Fecha no disponible")
+            dispatcher.utter_message(
+                f"📚 **Registros de materias cursadas para la matrícula {matricula}:**"
+            )
+
+            for materia in course_records:
+                nombre_materia = (materia.get("Materia") or {}).get("nombre") or "Materia sin nombre"
+                fecha_cursada = materia.get("fecha_cursada") or "Fecha no disponible"
 
                 dispatcher.utter_message(f"• **{nombre_materia}** - Cursada el: {fecha_cursada}")
 
-            dispatcher.utter_message(f"✅ Total de materias encontradas: {len(response.data)}")
-            return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+            dispatcher.utter_message(
+                f"✅ Total de registros de cursada encontrados: {len(course_records)}"
+            )
+            return [SlotSet("flujo_actual", None)]
         except Exception as e:
             print(f"Error al consultar materias: {e}")
-            dispatcher.utter_message("❌ Hubo un error al consultar tus materias. Por favor, intenta nuevamente más tarde.")
+            dispatcher.utter_message("❌ Hubo un error al consultar tus materias cursadas. Por favor, intenta nuevamente más tarde.")
 
-        return []
+        return [SlotSet("flujo_actual", None)]
 
 class ActionConsultarNotas(Action):
 
