@@ -31,6 +31,93 @@ rules:
       - intent: out_of_scope
       - action: utter_out_of_scope
 
+  # Institutional FAQs are stateless one-turn capabilities. Explicit rules
+  # make every supported FAQ available regardless of prior dialogue context.
+  - rule: FAQ requisitos de inscripción
+    steps:
+      - intent: requisitos_inscripcion
+      - action: utter_respuesta_requisito_inscripcion
+
+  - rule: FAQ plazos de inscripción
+    steps:
+      - intent: plazos_inscripcion
+      - action: utter_respuesta_plazos_inscripcion
+
+  - rule: FAQ evaluación CONEAU
+    steps:
+      - intent: evaluacion_coneau
+      - action: utter_respuesta_evaluacion_coneau
+
+  - rule: FAQ curso de ingreso
+    steps:
+      - intent: curso_ingreso
+      - action: utter_respuesta_curso_ingreso
+
+  - rule: FAQ modalidad de inscripción
+    steps:
+      - intent: informar_modalidad_inscripcion
+      - action: utter_respuesta_informar_modalidad_inscripcion
+
+  - rule: FAQ visitas
+    steps:
+      - intent: visitas_consultas
+      - action: utter_respuesta_visitas_consultas
+
+  - rule: FAQ becas
+    steps:
+      - intent: informar_becas_hermanos
+      - action: utter_respuesta_informar_becas_hermanos
+
+  - rule: FAQ horarios para trabajadores
+    steps:
+      - intent: informar_horarios_trabajadores
+      - action: utter_respuesta_informar_horarios_trabajadores
+
+  - rule: FAQ intercambio
+    steps:
+      - intent: informar_intercambio_de_estudio
+      - action: utter_respuesta_intercambio_de_estudio
+
+  - rule: FAQ equivalencias
+    steps:
+      - intent: informar_equivalencias
+      - action: utter_respuesta_equivalencias
+
+  - rule: FAQ exámenes y recuperatorios
+    steps:
+      - intent: informar_examen_recuperatorio
+      - action: utter_respuesta_examen_recuperatorio
+
+  - rule: FAQ régimen de asistencia
+    steps:
+      - intent: informar_asistencia
+      - action: utter_respuesta_asistencia
+
+  - rule: FAQ apoyo en informática e inglés
+    steps:
+      - intent: informar_ayuda_informatica_ingles
+      - action: utter_respuesta_informar_ayuda_informatica_ingles
+
+  - rule: FAQ nivel de profesores
+    steps:
+      - intent: informar_nivel_profesores
+      - action: utter_respuesta_informar_nivel_profesores
+
+  - rule: FAQ equipamiento tecnológico
+    steps:
+      - intent: informar_equipamiento_tecnologico
+      - action: utter_respuesta_informar_equipamiento_tecnologico
+
+  - rule: FAQ servicios
+    steps:
+      - intent: informar_servicios
+      - action: utter_respuesta_informar_servicios
+
+  - rule: FAQ contactos
+    steps:
+      - intent: contactos
+      - action: utter_contactos
+
   - rule: consultar materias con matrícula existente
     condition:
       - slot_was_set:
