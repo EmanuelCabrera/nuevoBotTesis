@@ -652,15 +652,6 @@ stories:
       - action: inscripcion_mesa_form
       - active_loop: inscripcion_mesa_form
 
-  - story: Seleccionar mesa de examen por código
-    steps:
-      - slot_was_set:
-          - is_authenticated: true
-      - intent: seleccionar_mesa_examen
-        entities:
-          - codigo_mesa_examen: "12345"
-      - action: seleccionar_mesa_form
-      - active_loop: seleccionar_mesa_form
 
   # FLUJO PARA CANCELAR INSCRIPCIÓN A MESA DE EXAMEN CON FORMS
   - story: Cancelar inscripción a mesa de examen sin datos

@@ -211,7 +211,7 @@ responses:
     - text: |
         Para inscribirte a una mesa de examen necesito saber de qué materia. Por favor, especifica la materia (por ejemplo: matematica, fisica, programacion).
   
-  utter_ask_seleccionar_mesa_form_fecha_mesa:
+  utter_ask_inscripcion_mesa_form_fecha_mesa:
     - text: |
         Por favor, proporciona la fecha de la mesa de examen a la que deseas inscribirte (ej: 2025-08-25).
   
@@ -253,8 +253,6 @@ forms:
     required_slots:
       - matricula
       - materia
-  seleccionar_mesa_form:
-    required_slots:
       - fecha_mesa
   cancelar_mesa_form:
     required_slots:
@@ -271,7 +269,7 @@ actions:
   - action_consultar_notas
   - action_consultar_requerimientos_materia
   - action_consultar_mesas_examen
-  - action_ofrecer_mesas_examen
+  - validate_inscripcion_mesa_form
   - action_inscripcion_mesa_examen
   - action_cancelar_inscripcion_mesa_examen
   - action_consultar_fechas_parciales
