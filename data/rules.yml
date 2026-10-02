@@ -108,27 +108,11 @@ rules:
       - action: inscripcion_mesa_form
       - active_loop: inscripcion_mesa_form
 
-  - rule: enviar inscripcion_mesa_form y ejecutar acción ofrecer mesas
+  - rule: enviar inscripcion_mesa_form y ejecutar acción inscripción
     condition:
       - active_loop: inscripcion_mesa_form
     steps:
       - action: inscripcion_mesa_form
-      - active_loop: null
-      - action: action_ofrecer_mesas_examen
-      - action: seleccionar_mesa_form
-      - active_loop: seleccionar_mesa_form
-
-  - rule: activar seleccionar_mesa_form al seleccionar mesa
-    steps:
-      - intent: seleccionar_mesa_examen
-      - action: seleccionar_mesa_form
-      - active_loop: seleccionar_mesa_form
-
-  - rule: enviar seleccionar_mesa_form y ejecutar inscripción
-    condition:
-      - active_loop: seleccionar_mesa_form
-    steps:
-      - action: seleccionar_mesa_form
       - active_loop: null
       - action: action_inscripcion_mesa_examen
 
@@ -146,12 +130,6 @@ rules:
       - active_loop: null
       - action: action_consultar_fechas_parciales
 
-  - rule: continuar inscripción tras proporcionar materia para inscripción
-    steps:
-      - intent: proporcionar_materia_para_inscripcion
-      - action: inscripcion_mesa_form
-      - active_loop: inscripcion_mesa_form
-
   - rule: activar cancelar_mesa_form al solicitar cancelación
     steps:
       - intent: cancelar_inscripcion_mesa_examen
@@ -166,12 +144,6 @@ rules:
       - active_loop: null
       - action: action_cancelar_inscripcion_mesa_examen
 
-  - rule: continuar inscripcion mesa de examen tras matricula
-    condition:
-      - slot_was_set:
-          - flujo_actual: inscripcion_mesa_examen
-    steps:
-      - action: action_ofrecer_mesas_examen
 
   - rule: continuar consultar materias tras matricula
     condition:
