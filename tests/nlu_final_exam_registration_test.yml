@@ -1,0 +1,55 @@
+version: "3.1"
+
+# Held-out 006 evaluation data. These examples are not training examples.
+nlu:
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - quiero anotarme al final de [Física II](materia)
+      - registrame en la mesa de [Redes de Computadoras II](materia)
+      - necesito reservar un lugar para rendir [Álgebra](materia)
+      - deseo hacer la inscripción al examen final de [Análisis Matemático I](materia)
+      - cómo puedo anotarme a una mesa de examen
+      - quiero reservar una mesa para rendir
+      - necesito inscribirme a un final
+      - me gustaría quedar registrado para rendir [Física III](materia)
+      - anotame a la próxima mesa de [Algoritmos y Estructuras II](materia)
+      - quiero asegurar mi lugar en el final de [Lengua y Comunicación](materia)
+      - quiero dar de alta mi inscripción para la mesa de [Física I](materia)
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - qué fecha tiene la mesa de [Física II](materia)
+      - cuándo se rinde el final de [Redes de Computadoras I](materia)
+      - necesito consultar el calendario de mesas de [Álgebra](materia)
+      - qué días hay para rendir [Análisis Matemático II](materia)
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - cuándo es el parcial de [Física II](materia)
+      - necesito las fechas de parciales de [Redes de Computadoras II](materia)
+      - qué día se toma el parcial de [Álgebra](materia)
+
+  - intent: cancelar_inscripcion_mesa_examen
+    examples: |
+      - quiero dar de baja mi inscripción a la mesa de [Física](materia)
+      - necesito cancelar mi registro para rendir [Álgebra](materia)
+      - ya no voy a rendir el final de [Redes de Computadoras II](materia)
+
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - qué correlativas necesito para cursar [Física II](materia)
+      - qué requisitos tiene [Redes de Computadoras I](materia)
+
+  - intent: consultar_notas
+    examples: |
+      - qué calificación tengo en [Física II](materia)
+
+  - intent: consultar_asistencia
+    examples: |
+      - cuántas faltas tengo en [Física II](materia)
+
+  - intent: proporcionar_materia
+    examples: |
+      - [Física II](materia)
+      - la materia es [Redes de Computadoras II](materia)
+      - sería [Álgebra y Geometría Analítica](materia)

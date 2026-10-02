@@ -1,0 +1,95 @@
+version: "3.1"
+
+stories:
+  - story: fechas parciales A - solicitud explícita con materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuándo es el parcial de [Física II](materia)?
+        intent: consultar_fechas_parciales
+      - slot_was_set:
+          - materia: Física II
+      - action: fechas_parciales_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_fechas_parciales
+
+  - story: fechas parciales B - solicitud sin materia activa formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuándo son los parciales?
+        intent: consultar_fechas_parciales
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: fechas parciales C - respuesta contextual completa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          ¿Cuándo son los parciales?
+        intent: consultar_fechas_parciales
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física II](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: Física II
+      - action: fechas_parciales_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_fechas_parciales
+
+  - story: fechas parciales D - matrícula antecede a materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          ¿Cuándo son los parciales?
+        intent: consultar_fechas_parciales
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - user: |
+          Mi matrícula es [66001](matricula)
+        intent: proporcionar_matricula
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - slot_was_set:
+          - requested_slot: materia
+
+  - story: fechas parciales E - nueva solicitud reemplaza la materia anterior
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          fechas de parciales de [Física I](materia)
+        intent: consultar_fechas_parciales
+      - slot_was_set:
+          - materia: Física I
+      - action: fechas_parciales_form
+      - active_loop: null
+      - action: action_consultar_fechas_parciales
+      - slot_was_set:
+          - materia: null
+      - user: |
+          fechas de parciales de [Física II](materia)
+        intent: consultar_fechas_parciales
+      - slot_was_set:
+          - materia: Física II
+      - action: fechas_parciales_form
+      - active_loop: null
+      - action: action_consultar_fechas_parciales

@@ -152,21 +152,18 @@ class ActionConsultarFechasParciales(Action):
         return "action_consultar_fechas_parciales"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
-        # Verificar si el usuario está autenticado
         is_authenticated = tracker.get_slot('is_authenticated')
 
         if not is_authenticated:
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar las fechas de los parciales. Por favor, inicia sesión primero.")
             return []
 
-        # Obtener la matrícula del slot
         matricula = tracker.get_slot('matricula')
 
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar las fechas de los parciales.")
             return [SlotSet("flujo_actual", "consultar_fechas_parciales")]
 
-        # Obtener la materia del slot
         materia = tracker.get_slot('materia')
 
         if not materia:
@@ -174,24 +171,42 @@ class ActionConsultarFechasParciales(Action):
             return [SlotSet("flujo_actual", "consultar_fechas_parciales")]
 
         try:
-            # Buscar el código de la materia por nombre
-            materia_resp = supabase.table("Materia").select("codigo, nombre").ilike("nombre", "%" + materia + "%").execute()
-            if not materia_resp.data:
-                dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
-                return [SlotSet("flujo_actual", None)]
+            catalog_rows = subject_catalog.get_subjects()
+            resolution_status, resolution = subject_resolver.resolve(catalog_rows, materia)
 
-            materia_codigo = materia_resp.data[0]["codigo"]
-            # Buscar las fechas de los parciales
+            if resolution_status == "not_found":
+                dispatcher.utter_message(
+                    f"❌ No se encontró la materia '{materia}' en la base de datos."
+                )
+                return [
+                    SlotSet("materia", None),
+                    SlotSet("flujo_actual", "consultar_fechas_parciales"),
+                ]
+
+            if resolution_status == "ambiguous":
+                options = ", ".join(sorted({subject["nombre"] for subject in resolution}))
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
+                    "Por favor, indica cuál necesitas."
+                )
+                return [
+                    SlotSet("materia", None),
+                    SlotSet("flujo_actual", "consultar_fechas_parciales"),
+                ]
+
+            materia_codigo = resolution["codigo"]
+            materia_nombre = resolution["nombre"]
             fechas_parciales_resp = supabase.table("Parciales").select("*").eq("materia_codigo", materia_codigo).execute()
 
             if not fechas_parciales_resp.data:
-                dispatcher.utter_message("❌ No se encontraron fechas de parciales registradas.")
-                return [SlotSet("flujo_actual", None)]
+                dispatcher.utter_message(
+                    f"❌ No se encontraron fechas de parciales registradas para la materia '{materia_nombre}'."
+                )
+                return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
 
-            # Ordenar los parciales por fecha
             parciales_ordenados = sorted(fechas_parciales_resp.data, key=lambda x: x.get('fecha_parcial', ''))
 
-            dispatcher.utter_message(f"📊 **Fechas de los parciales:**")
+            dispatcher.utter_message(f"📊 **Fechas de los parciales de {materia_nombre.upper()}:**")
 
             for i, parcial in enumerate(parciales_ordenados, 1):
                 fecha = parcial.get('fecha_parcial', 'Sin fecha')
