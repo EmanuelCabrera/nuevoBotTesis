@@ -1,0 +1,94 @@
+version: "3.1"
+
+stories:
+  - story: mesas A - inscripción exitosa completa
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física](materia)
+        intent: proporcionar_materia
+      - action: inscripcion_mesa_form
+      - slot_was_set:
+          - materia: Física
+          - requested_slot: fecha_mesa
+      - user: |
+          [2024-12-15](fecha_mesa)
+        intent: seleccionar_mesa_examen
+      - action: inscripcion_mesa_form
+      - slot_was_set:
+          - fecha_mesa: "2024-12-15"
+          - requested_slot: null
+      - active_loop: null
+      - action: action_inscripcion_mesa_examen
+      - slot_was_set:
+          - flujo_actual: null
+          - materia: null
+          - fecha_mesa: null
+
+  - story: mesas B - inscripción fallida materia inexistente repregunta
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Biología](materia)
+        intent: proporcionar_materia
+      - action: inscripcion_mesa_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - user: |
+          [Matemática](materia)
+        intent: proporcionar_materia
+      - action: inscripcion_mesa_form
+      - slot_was_set:
+          - materia: Matemática
+          - requested_slot: fecha_mesa
+      - user: |
+          [2024-12-20](fecha_mesa)
+        intent: seleccionar_mesa_examen
+      - action: inscripcion_mesa_form
+      - slot_was_set:
+          - fecha_mesa: "2024-12-20"
+          - requested_slot: null
+      - active_loop: null
+      - action: action_inscripcion_mesa_examen
+      - slot_was_set:
+          - flujo_actual: null
+          - materia: null
+          - fecha_mesa: null
+
+  - story: mesas C - cancelar inscripción exitosa
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - intent: cancelar_inscripcion_mesa_examen
+      - action: cancelar_mesa_form
+      - active_loop: cancelar_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [Física](materia)
+        intent: proporcionar_materia
+      - action: cancelar_mesa_form
+      - slot_was_set:
+          - materia: Física
+          - requested_slot: null
+      - active_loop: null
+      - action: action_cancelar_inscripcion_mesa_examen
+      - slot_was_set:
+          - flujo_actual: null
+          - materia: null
