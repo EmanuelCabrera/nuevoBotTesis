@@ -1,0 +1,137 @@
+version: "3.1"
+
+nlu:
+  - intent: requisitos_inscripcion
+    examples: |
+      - qué documentación tengo que presentar para ingresar a la UGD
+      - cuáles son los papeles de admisión para una carrera
+
+  - intent: plazos_inscripcion
+    examples: |
+      - hasta qué fecha aceptan inscripciones a las carreras
+      - en qué meses abre la inscripción universitaria
+
+  - intent: evaluacion_coneau
+    examples: |
+      - la UGD cuenta con autorización de CONEAU
+      - las carreras tienen acreditación nacional
+
+  - intent: curso_ingreso
+    examples: |
+      - debo hacer un curso nivelatorio antes de comenzar
+      - cómo funciona el cursillo de ingreso
+
+  - intent: informar_modalidad_inscripcion
+    examples: |
+      - la inscripción a la carrera es presencial u online
+      - puedo anotarme a distancia en la universidad
+
+  - intent: visitas_consultas
+    examples: |
+      - puedo recorrer la universidad antes de inscribirme
+      - se puede coordinar una visita a la UGD
+
+  - intent: informar_becas_hermanos
+    examples: |
+      - qué becas y descuentos para hermanos ofrece la UGD
+      - hay bonificación si estudiamos dos hermanos
+
+  - intent: informar_horarios_trabajadores
+    examples: |
+      - hay horarios flexibles para estudiantes que trabajan
+      - qué contemplaciones de cursado existen si tengo empleo
+
+  - intent: informar_intercambio_de_estudio
+    examples: |
+      - con qué universidades hay convenios de intercambio
+      - la UGD ofrece programas de intercambio académico
+
+  - intent: informar_equivalencias
+    examples: |
+      - puedo reconocer materias aprobadas en otra universidad
+      - cómo analiza la UGD las equivalencias
+      - la universidad puede validar estudios que hice en otra institución
+
+  - intent: informar_examen_recuperatorio
+    examples: |
+      - los parciales tienen recuperatorio
+      - cuál es la modalidad general de los exámenes y la nota mínima
+      - cómo es el régimen general de parciales y recuperatorios
+
+  - intent: informar_asistencia
+    examples: |
+      - qué porcentaje de asistencia exige la universidad
+      - cuál es el máximo reglamentario de inasistencias
+      - cuántas faltas puedo tener sin perder la regularidad
+
+  - intent: informar_ayuda_informatica_ingles
+    examples: |
+      - hay clases de consulta para informática e inglés
+      - puedo recibir apoyo en inglés dentro de la carrera
+
+  - intent: informar_nivel_profesores
+    examples: |
+      - qué formación académica tienen los docentes
+      - los profesores cuentan con posgrados
+
+  - intent: informar_equipamiento_tecnologico
+    examples: |
+      - cuántos laboratorios informáticos tiene la UGD
+      - qué infraestructura tecnológica ofrece la universidad
+
+  - intent: informar_servicios
+    examples: |
+      - qué servicios institucionales tienen los estudiantes
+      - la universidad ofrece biblioteca y deportes
+
+  - intent: contactos
+    examples: |
+      - dónde encuentro los teléfonos de las sedes
+      - necesito el correo de contacto de la UGD
+
+  - intent: consultar_asistencia
+    examples: |
+      - cuántas faltas tengo en [Física II](materia)
+      - cuántas faltas tengo
+
+  - intent: consultar_notas
+    examples: |
+      - qué nota obtuve en [Álgebra](materia)
+
+  - intent: consultar_requerimientos_materia
+    examples: |
+      - qué correlativas necesito para cursar [Redes de Computadoras II](materia)
+      - cuáles son los requisitos de [Física II](materia)
+
+  - intent: consultar_fecha_mesas_examen_final
+    examples: |
+      - cuándo es el final de [Física II](materia)
+      - qué día se rinde el final de [Álgebra](materia)
+
+  - intent: consultar_fechas_parciales
+    examples: |
+      - cuándo rindo el parcial de [Álgebra](materia)
+      - cuál es la fecha del parcial de [Física II](materia)
+
+  - intent: inscribirse_mesa_examen
+    examples: |
+      - quiero anotarme al final de [Física II](materia)
+
+  - intent: cancelar_inscripcion_mesa_examen
+    examples: |
+      - quiero cancelar mi inscripción a la mesa de [Álgebra](materia)
+
+  - intent: consultar_materias
+    examples: |
+      - mostrame mis materias cursadas
+
+  # Diagnostics for broad wording. These cases are reported separately from
+  # supported FAQ and semantic-boundary acceptance results.
+  - intent: out_of_scope
+    examples: |
+      - necesito información
+      - qué puedo hacer
+      - ayuda
+      - cómo funciona
+      - qué necesito
+      - qué opciones tengo
