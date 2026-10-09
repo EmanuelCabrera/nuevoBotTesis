@@ -34,6 +34,18 @@ def _registration_retry_events(clear_mesa=True):
     return events
 
 
+def _cancellation_retry_events(clear_subject=False):
+    events = []
+    if clear_subject:
+        events.append(SlotSet("materia", None))
+    events.append(SlotSet("flujo_actual", "cancelar_inscripcion_mesa_examen"))
+    return events
+
+
+def _cancellation_complete_events():
+    return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+
+
 def _resolve_registration_subject(materia):
     catalog = subject_catalog.get_subjects()
     return subject_resolver.resolve(catalog, materia)
@@ -129,11 +141,11 @@ class ValidateInscripcionMesaForm(FormValidationAction):
         if not is_authenticated:
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar e inscribirte a una mesa de examen. Por favor, inicia sesión primero.")
             return {"matricula": None}
-            
+
         if not slot_value:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder continuar.")
             return {"matricula": None}
-            
+
         return {"matricula": slot_value}
 
     def validate_materia(
@@ -143,43 +155,60 @@ class ValidateInscripcionMesaForm(FormValidationAction):
         tracker: Tracker,
         domain: dict,
     ) -> Dict[Text, Any]:
-        catalog = subject_catalog.get_subjects()
-        resolution_status, resolution = SubjectResolver().resolve(catalog, slot_value)
-
-        if resolution_status == "not_found":
-            dispatcher.utter_message(f"😕 No se encontró la materia '{slot_value}' en la base de datos. Por favor, intenta ingresando otra materia.")
-            return {"materia": None}
-
-        if resolution_status == "ambiguous":
-            options = ", ".join(subject["nombre"] for subject in resolution)
+        if not slot_value:
             dispatcher.utter_message(
-                f"❓ Encontré varias materias que coinciden con '{slot_value}': {options}. "
-                "Por favor, especifica cuál necesitas."
+                "❌ No tengo la materia especificada. Por favor, dime de qué "
+                "materia quieres consultar las mesas disponibles."
             )
             return {"materia": None}
 
-        materia_codigo = resolution["codigo"]
-        nombre_materia = resolution["nombre"]
-
-        # Buscar mesas disponibles
-        mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).order("fecha", desc=False).execute()
-        
-        if not mesas_resp.data:
-            dispatcher.utter_message(f"📅 No se encontraron mesas de examen disponibles para la materia '{nombre_materia}'.")
-            return {"materia": None}
-
-        dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
-        for idx, mesa in enumerate(mesas_resp.data, 1):
-            codigo_mesa = mesa.get("codigo", "Sin código")
-            fecha_mesa = mesa.get("fecha", "Fecha no disponible")
-            dispatcher.utter_message(
-                f"-----------------------------\n"
-                f"📝 Mesa #{idx}\n"
-                f"📋 Código: `{codigo_mesa}`\n"
-                f"📅 Fecha: {fecha_mesa}\n"
-                f"-----------------------------"
+        try:
+            catalog = subject_catalog.get_subjects()
+            resolution_status, resolution = subject_resolver.resolve(
+                catalog, slot_value
             )
-        return {"materia": nombre_materia}
+
+            if resolution_status == "not_found":
+                dispatcher.utter_message(f"😕 No se encontró la materia '{slot_value}' en la base de datos. Por favor, intenta ingresando otra materia.")
+                return {"materia": None}
+
+            if resolution_status == "ambiguous":
+                options = ", ".join(subject["nombre"] for subject in resolution)
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{slot_value}': {options}. "
+                    "Por favor, especifica cuál necesitas."
+                )
+                return {"materia": None}
+
+            materia_codigo = resolution["codigo"]
+            nombre_materia = resolution["nombre"]
+
+            # Buscar mesas disponibles
+            mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).order("fecha", desc=False).execute()
+
+            if not mesas_resp.data:
+                dispatcher.utter_message(f"📅 No se encontraron mesas de examen disponibles para la materia '{nombre_materia}'.")
+                return {"materia": None}
+
+            dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
+            for idx, mesa in enumerate(mesas_resp.data, 1):
+                codigo_mesa = mesa.get("codigo", "Sin código")
+                fecha_mesa = mesa.get("fecha", "Fecha no disponible")
+                dispatcher.utter_message(
+                    f"-----------------------------\n"
+                    f"📝 Mesa #{idx}\n"
+                    f"📋 Código: `{codigo_mesa}`\n"
+                    f"📅 Fecha: {fecha_mesa}\n"
+                    f"-----------------------------"
+                )
+            return {"materia": nombre_materia}
+        except Exception as e:
+            print(f"Error al validar la materia para inscripción: {e}")
+            dispatcher.utter_message(
+                "❌ Hubo un error al consultar las mesas de examen. "
+                "Por favor, intenta nuevamente más tarde."
+            )
+            return {"materia": None}
 
     def validate_fecha_mesa(
         self,
@@ -193,7 +222,7 @@ class ValidateInscripcionMesaForm(FormValidationAction):
             # Si el valor ingresado no parece una fecha (YYYY-MM-DD), asumimos que es el código de la mesa
             if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(slot_value)):
                 return {"fecha_mesa": slot_value, "codigo_mesa_examen": slot_value}
-            
+
             return {"fecha_mesa": slot_value, "codigo_mesa_examen": None}
         return {"fecha_mesa": None}
 
@@ -301,71 +330,68 @@ class ActionCancelarInscripcionMesa(Action):
         return "action_cancelar_inscripcion_mesa_examen"
 
     def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
+        is_authenticated = tracker.get_slot('is_authenticated')
         materia = tracker.get_slot('materia')
         matricula = tracker.get_slot('matricula')
-        
+
+        if not is_authenticated:
+            dispatcher.utter_message(
+                "❌ Necesitas estar autenticado para cancelar una inscripción a una mesa de examen. "
+                "Por favor, inicia sesión primero."
+            )
+            return []
+
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder cancelar la inscripción.")
-            return []
-        
+            return _cancellation_retry_events()
+
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres cancelar la inscripción.")
-            return []
-        
+            return _cancellation_retry_events()
+
         try:
-            # Resolver la expresión contra el catálogo canónico completo.
-            catalog = subject_catalog.get_subjects()
-            resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
-
-            if resolution_status == "not_found":
-                dispatcher.utter_message(f"😕 No se encontró la materia '{materia}' en la base de datos. Por favor, intenta ingresando otra materia.")
-                return [SlotSet("materia", None)]
-
-            if resolution_status == "ambiguous":
-                options = ", ".join(subject["nombre"] for subject in resolution)
-                dispatcher.utter_message(
-                    f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
-                    "Por favor, indica cuál necesitas."
+            resolution_status, resolution = _resolve_registration_subject(materia)
+            if resolution_status != "resolved":
+                _subject_resolution_message(
+                    dispatcher, materia, resolution_status, resolution
                 )
-                return [SlotSet("materia", None)]
+                return _cancellation_retry_events(clear_subject=True)
+
             materia_codigo = resolution["codigo"]
             nombre_materia = resolution["nombre"]
-            
-            # Buscar las mesas de examen para esa materia específica
             mesa_response = supabase.table("MesaExamen").select('codigo').eq("materia_codigo", materia_codigo).execute()
-            
-            print(f"Mesas encontradas para {nombre_materia}: {mesa_response.data}")
+
             if not mesa_response.data:
-                dispatcher.utter_message(f"❌ No se encontraron mesas de examen para la materia '{materia}'.")
-                return []
-            
-            # Buscar todas las inscripciones del estudiante para las mesas de esa materia
+                dispatcher.utter_message(f"❌ No se encontraron mesas de examen para la materia '{nombre_materia}'.")
+                return _cancellation_complete_events()
+
             inscripciones_canceladas = 0
+            mesas_canceladas = []
             for mesa in mesa_response.data:
                 codigo_mesa = mesa.get("codigo")
-                
-                # Buscar la inscripción específica
+
                 inscripcion_response = supabase.table("Inscripcion").select('*').eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
-                
-                print(inscripcion_response.data)
+
                 if inscripcion_response.data:
-                    # Eliminar la inscripción
                     delete_response = supabase.table("Inscripcion").delete().eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
-                    
+
                     if delete_response.data:
-                        inscripciones_canceladas += 1
-                        dispatcher.utter_message(f"✅ Tu inscripción a la mesa de examen de {nombre_materia} (código: {codigo_mesa}) ha sido cancelada exitosamente.")
-            
+                        inscripciones_canceladas += len(delete_response.data)
+                        mesas_canceladas.append(codigo_mesa)
+
+            for codigo_mesa in mesas_canceladas:
+                dispatcher.utter_message(f"✅ Tu inscripción a la mesa de examen de {nombre_materia} (código: {codigo_mesa}) ha sido cancelada exitosamente.")
+
             if inscripciones_canceladas == 0:
-                dispatcher.utter_message(f"❌ No se encontró una inscripción activa para la matrícula {matricula} en ninguna mesa de examen de la materia '{materia}'.")
+                dispatcher.utter_message(f"❌ No se encontró una inscripción activa para la matrícula {matricula} en ninguna mesa de examen de la materia '{nombre_materia}'.")
             elif inscripciones_canceladas == 1:
                 dispatcher.utter_message("✅ Cancelación completada.")
             else:
                 dispatcher.utter_message(f"✅ Se cancelaron {inscripciones_canceladas} inscripciones.")
-                
+
+            return _cancellation_complete_events()
+
         except Exception as e:
             print(f"Error al cancelar inscripción: {e}")
             dispatcher.utter_message("❌ Hubo un error al procesar la cancelación. Por favor, intenta nuevamente más tarde.")
-        
-        return []
-
+            return _cancellation_retry_events()
