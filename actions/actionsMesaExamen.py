@@ -126,45 +126,74 @@ class ActionVerMesasExamen(Action):
 
         return []
 
-class ActionOfrecerMesasExamen(Action):
-    def name(self):
-        return "action_ofrecer_mesas_examen"
+class ValidateInscripcionMesaForm(FormValidationAction):
+    def name(self) -> Text:
+        return "validate_inscripcion_mesa_form"
 
-    def run(self, dispatcher: CollectingDispatcher, tracker: Tracker, domain):
+    def validate_matricula(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
         is_authenticated = tracker.get_slot('is_authenticated')
         if not is_authenticated:
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar e inscribirte a una mesa de examen. Por favor, inicia sesión primero.")
-            return []
+            return {"matricula": None}
 
-        matricula = tracker.get_slot('matricula')
-        materia = tracker.get_slot('materia')
-
-        if not matricula:
+        if not slot_value:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder continuar.")
-            return [SlotSet("flujo_actual", "inscripcion_mesa_examen")]
-        if not materia:
-            dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime a qué materia quieres inscribirte para la mesa de examen.")
-            return [SlotSet("flujo_actual", "inscripcion_mesa_examen")]
+            return {"matricula": None}
+
+        return {"matricula": slot_value}
+
+    def validate_materia(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: dict,
+    ) -> Dict[Text, Any]:
+        if not slot_value:
+            dispatcher.utter_message(
+                "❌ No tengo la materia especificada. Por favor, dime de qué "
+                "materia quieres consultar las mesas disponibles."
+            )
+            return {"materia": None}
+
         try:
-            resolution_status, resolution = _resolve_registration_subject(materia)
-            if resolution_status != "resolved":
-                _subject_resolution_message(dispatcher, materia, resolution_status, resolution)
-                return [SlotSet("materia", None), SlotSet("flujo_actual", "inscripcion_mesa_examen")]
+            catalog = subject_catalog.get_subjects()
+            resolution_status, resolution = subject_resolver.resolve(
+                catalog, slot_value
+            )
+
+            if resolution_status == "not_found":
+                dispatcher.utter_message(f"😕 No se encontró la materia '{slot_value}' en la base de datos. Por favor, intenta ingresando otra materia.")
+                return {"materia": None}
+
+            if resolution_status == "ambiguous":
+                options = ", ".join(subject["nombre"] for subject in resolution)
+                dispatcher.utter_message(
+                    f"❓ Encontré varias materias que coinciden con '{slot_value}': {options}. "
+                    "Por favor, especifica cuál necesitas."
+                )
+                return {"materia": None}
 
             materia_codigo = resolution["codigo"]
             nombre_materia = resolution["nombre"]
 
+            # Buscar mesas disponibles
             mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).order("fecha", desc=False).execute()
+
             if not mesas_resp.data:
-                dispatcher.utter_message(f"📅 No se encontraron mesas de examen para la materia '{nombre_materia}'.")
-                return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+                dispatcher.utter_message(f"📅 No se encontraron mesas de examen disponibles para la materia '{nombre_materia}'.")
+                return {"materia": None}
 
             dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
-            mesas_list = []
             for idx, mesa in enumerate(mesas_resp.data, 1):
                 codigo_mesa = mesa.get("codigo", "Sin código")
                 fecha_mesa = mesa.get("fecha", "Fecha no disponible")
-                mesas_list.append({"codigo": codigo_mesa, "fecha": fecha_mesa})
                 dispatcher.utter_message(
                     f"-----------------------------\n"
                     f"📝 Mesa #{idx}\n"
@@ -172,13 +201,30 @@ class ActionOfrecerMesasExamen(Action):
                     f"📅 Fecha: {fecha_mesa}\n"
                     f"-----------------------------"
                 )
-            # Mantener la materia para el flujo de formularios, solo limpiar flujo_actual
-            return [SlotSet("flujo_actual", None)]
+            return {"materia": nombre_materia}
         except Exception as e:
-            print(f"Error al ofrecer mesas de examen: {e}")
-            dispatcher.utter_message("❌ Hubo un error al consultar las mesas de examen. Por favor, intenta nuevamente más tarde.")
-            return _registration_retry_events(clear_mesa=False)
-        return _registration_retry_events(clear_mesa=False)
+            print(f"Error al validar la materia para inscripción: {e}")
+            dispatcher.utter_message(
+                "❌ Hubo un error al consultar las mesas de examen. "
+                "Por favor, intenta nuevamente más tarde."
+            )
+            return {"materia": None}
+
+    def validate_fecha_mesa(
+        self,
+        slot_value: Any,
+        dispatcher: CollectingDispatcher,
+        tracker: Tracker,
+        domain: Dict[Text, Any],
+    ) -> Dict[Text, Any]:
+        import re
+        if slot_value:
+            # Si el valor ingresado no parece una fecha (YYYY-MM-DD), asumimos que es el código de la mesa
+            if not re.match(r'^\d{4}-\d{2}-\d{2}$', str(slot_value)):
+                return {"fecha_mesa": slot_value, "codigo_mesa_examen": slot_value}
+
+            return {"fecha_mesa": slot_value, "codigo_mesa_examen": None}
+        return {"fecha_mesa": None}
 
 # Modificar ActionInscripcionMesaExamen para solo inscribir si ya hay código de mesa seleccionado
 def _find_mesa_by_codigo(codigo_mesa):
@@ -206,10 +252,11 @@ class ActionInscripcionMesaExamen(Action):
         # Si no hay código pero sí fecha, buscar el código de la mesa para esa fecha y materia
         if not codigo_mesa and fecha_mesa and materia:
             try:
-                resolution_status, resolution = _resolve_registration_subject(materia)
+                catalog = subject_catalog.get_subjects()
+                resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
                 if resolution_status != "resolved":
-                    _subject_resolution_message(dispatcher, materia, resolution_status, resolution)
-                    return [SlotSet("materia", None)] + _registration_retry_events()
+                    dispatcher.utter_message(f"❌ No se encontró la materia '{materia}' en la base de datos.")
+                    return []
                 materia_codigo = resolution["codigo"]
                 mesa_resp = supabase.table("MesaExamen").select('codigo').eq("materia_codigo", materia_codigo).eq("fecha", fecha_mesa).execute()
                 if not mesa_resp.data:
@@ -312,7 +359,6 @@ class ActionCancelarInscripcionMesa(Action):
 
             materia_codigo = resolution["codigo"]
             nombre_materia = resolution["nombre"]
-
             mesa_response = supabase.table("MesaExamen").select('codigo').eq("materia_codigo", materia_codigo).execute()
 
             if not mesa_response.data:
@@ -349,88 +395,3 @@ class ActionCancelarInscripcionMesa(Action):
             print(f"Error al cancelar inscripción: {e}")
             dispatcher.utter_message("❌ Hubo un error al procesar la cancelación. Por favor, intenta nuevamente más tarde.")
             return _cancellation_retry_events()
-
-class ValidateSeleccionarMesaForm(FormValidationAction):
-    def name(self) -> Text:
-        return "validate_seleccionar_mesa_form"
-
-    def validate_codigo_mesa_examen(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        import re
-        
-        print(f"DEBUG: Validando codigo_mesa_examen con valor: '{slot_value}'")
-        
-        # Verificar si hay entidades extraídas por NLU
-        entities = tracker.latest_message.get('entities', [])
-        
-        # Buscar si hay una entidad fecha_mesa
-        for entity in entities:
-            if entity.get('entity') == 'fecha_mesa':
-                fecha_valor = entity.get('value')
-                print(f"DEBUG: Entidad fecha detectada por NLU: {fecha_valor}")
-                return {"codigo_mesa_examen": None, "fecha_mesa": fecha_valor}
-        
-        # Si no hay entidad fecha, verificar con regex como fallback
-        if slot_value and re.match(r'^\d{4}-\d{2}-\d{2}$', slot_value):
-            print(f"DEBUG: Fecha detectada por regex: {slot_value}")
-            return {"codigo_mesa_examen": None, "fecha_mesa": slot_value}
-        
-        # Si es un código válido
-        if slot_value:
-            print(f"DEBUG: Código detectado: {slot_value}")
-            return {"codigo_mesa_examen": slot_value}
-        
-        print(f"DEBUG: Valor vacío o inválido")
-        return {"codigo_mesa_examen": None}
-
-    def validate_fecha_mesa(
-        self,
-        slot_value: Any,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> Dict[Text, Any]:
-        print(f"DEBUG: Validando fecha_mesa con valor: '{slot_value}'")
-        # Si ya tenemos fecha, limpiar código
-        if slot_value:
-            print(f"DEBUG: Fecha validada: {slot_value}")
-            return {"fecha_mesa": slot_value, "codigo_mesa_examen": None}
-        return {"fecha_mesa": None}
-
-    async def required_slots(
-        self,
-        domain_slots: List[Text],
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> List[Text]:
-        # Verificar si ya tenemos uno de los dos valores
-        codigo_mesa = tracker.get_slot("codigo_mesa_examen")
-        fecha_mesa = tracker.get_slot("fecha_mesa")
-        
-        print(f"DEBUG: required_slots - codigo_mesa: {codigo_mesa}, fecha_mesa: {fecha_mesa}")
-        
-        # Si tenemos alguno de los dos, formulario completo
-        if codigo_mesa or fecha_mesa:
-            print("DEBUG: Formulario completo, no se requieren más slots")
-            return []
-        
-        # Por defecto, pedimos código primero (que puede ser código o fecha)
-        print("DEBUG: Solicitando codigo_mesa_examen")
-        return ["codigo_mesa_examen"]
-    
-    async def submit(
-        self,
-        dispatcher: CollectingDispatcher,
-        tracker: Tracker,
-        domain: Dict[Text, Any],
-    ) -> List[Dict]:
-        print("DEBUG: Formulario submit ejecutado")
-        # El formulario está completo, no hacer nada aquí
-        # La regla se encargará de ejecutar action_inscripcion_mesa_examen
-        return []

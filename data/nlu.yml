@@ -696,6 +696,9 @@ nlu:
       - notas de [literatura](materia) con matricula [66031](matricula)
   - intent: consultar_requerimientos_materia
     examples: |
+      - ¿Qué requisitos tiene [Física II](materia)?
+      - que requisitos tiene [Matematica](materia)
+      - decime los requisitos de [Algoritmos 1](materia)
       - cuales son los requerimientos para cursar [Redes de computadoras 1](materia)
       - que necesito para cursar [Algoritmos 1](materia)
       - cuales son los prerequisitos de [Programacion Estructurada](materia)
@@ -807,6 +810,11 @@ nlu:
       - calendario de parciales para [Redes de Computadoras I](materia)
   - intent: consultar_asistencia
     examples: |
+      - ¿Cuántas faltas tengo?
+      - cuantas inasistencias tengo
+      - quiero saber cuantas faltas me quedan
+      - cuantas ausencias tengo
+      - decirme cuantas faltas tengo
       - quiero consultar mi asistencia
       - quiero consultar mi asistencia de [biologia](materia)
       - quiero ver mi asistencia
@@ -1055,6 +1063,11 @@ nlu:
       - una mesa examinadora, qué fecha tiene
   - intent: proporcionar_materia
     examples: |
+      - La materia para inscribirme es [Física II](materia)
+      - la materia es [Matematica](materia)
+      - me quiero inscribir en [Programacion](materia)
+      - es para [Ingles](materia)
+      - para la materia [Historia](materia)
       - [matematica](materia)
       - [fisica](materia)
       - [programacion](materia)
