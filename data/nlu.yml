@@ -566,24 +566,24 @@ nlu:
   - intent: consultar_materias
     examples: |
       - quiero ver mis materias
-      - necesito ver mis materias en curso
-      - cuales son mis materias actuales
-      - dime que materias estoy cursando
+      - quiero ver las materias que cursé
+      - cuales son mis materias cursadas
+      - dime que materias cursé
       - quiero saber mis materias
-      - cuales son mis materias del cuatrimestre
+      - que materias figuran como cursadas
       - necesito consultar mis materias
       - quiero ver que materias tengo
-      - dime mis materias en curso
-      - cuales son las materias que estoy cursando
-      - quiero saber que materias tengo este cuatrimestre
+      - mostrame mis materias cursadas
+      - cuales son las materias que cursé
+      - quiero saber que materias tengo registradas como cursadas
       - necesito ver mi lista de materias
-      - quiero consultar que materias estoy cursando
+      - quiero consultar mi historial de cursadas
       - dime cuales son mis materias
-      - necesito saber mis materias en curso
+      - necesito saber que materias cursé
       - quiero ver cuales son mis materias
-      - cuales materias tengo este semestre
-      - quiero consultar mis materias actuales
-      - dime que materias tengo en curso
+      - que materias aparecen en mi historial de cursadas
+      - quiero consultar mis materias cursadas
+      - dime que materias figuran como cursadas
       - quiero ver mis materias con matricula [66001](matricula)
       - necesito consultar mis materias matricula [66022](matricula)
       - cuales son mis materias matricula [66031](matricula)
@@ -592,7 +592,7 @@ nlu:
       - consultar materias matricula [66031](matricula)
       - ver materias matricula [66001](matricula)
       - mis materias matricula [66022](matricula)
-      - materias en curso matricula [66031](matricula)
+      - materias cursadas matricula [66031](matricula)
       - necesito consultar mis materias con matricula [66022](matricula)
       - cuales son mis materias con matricula [66031](matricula)
       - dime que materias tengo con matricula [66001](matricula)
@@ -600,7 +600,7 @@ nlu:
       - consultar materias con matricula [66031](matricula)
       - ver materias con matricula [66001](matricula)
       - mis materias con matricula [66022](matricula)
-      - materias en curso con matricula [66031](matricula)
+      - materias cursadas con matricula [66031](matricula)
   - intent: consultar_notas
     examples: |
       - quiero ver mis notas

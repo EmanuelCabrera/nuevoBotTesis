@@ -1,0 +1,69 @@
+version: "3.1"
+
+stories:
+  - story: materias A - solicitud explícita con matrícula existente
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Mostrame mis materias cursadas
+        intent: consultar_materias
+      - action: action_consultar_materias
+
+  - story: materias B - solicitud que incluye matrícula
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          Quiero consultar mis materias cursadas con matrícula [66017](matricula)
+        intent: consultar_materias
+      - slot_was_set:
+          - matricula: "66017"
+      - action: action_consultar_materias
+
+  - story: materias C - solicitud sin matrícula activa formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          Qué materias cursé
+        intent: consultar_materias
+      - action: materias_form
+      - active_loop: materias_form
+      - slot_was_set:
+          - requested_slot: matricula
+
+  - story: materias D - matrícula completa el formulario
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          Cuáles son mis materias cursadas
+        intent: consultar_materias
+      - action: materias_form
+      - active_loop: materias_form
+      - slot_was_set:
+          - requested_slot: matricula
+      - user: |
+          Mi matrícula es [66007](matricula)
+        intent: proporcionar_matricula
+      - slot_was_set:
+          - matricula: "66007"
+      - action: materias_form
+      - active_loop: null
+      - action: action_consultar_materias
+
+  - story: materias E - solicitud explícita repetida
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - user: |
+          Mostrame mis materias cursadas
+        intent: consultar_materias
+      - action: action_consultar_materias
+      - user: |
+          Volvé a mostrarme mis materias cursadas
+        intent: consultar_materias
+      - action: action_consultar_materias
