@@ -1,0 +1,175 @@
+version: "3.1"
+
+# These dialogue tests characterize ownership after a validator rejects a
+# subject. The validator clears materia; the same form remains active and asks
+# for materia again before a corrected canonical value can submit the form.
+stories:
+  - story: 010 attendance invalid subject stays in form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_asistencia
+      - action: asistencia_form
+      - active_loop: asistencia_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: asistencia_form
+      - active_loop: asistencia_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+
+  - story: 010 grades invalid subject stays in form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_notas
+      - action: notas_form
+      - active_loop: notas_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: notas_form
+      - active_loop: notas_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: notas_form
+      - active_loop: null
+      - action: action_consultar_notas
+
+  - story: 010 requirements invalid subject stays in form without matricula
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: requisitos_form
+      - active_loop: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: 010 final dates invalid subject stays in form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - intent: consultar_fecha_mesas_examen_final
+      - action: consultar_mesas_form
+      - active_loop: consultar_mesas_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: consultar_mesas_form
+      - active_loop: consultar_mesas_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: consultar_mesas_form
+      - active_loop: null
+      - action: action_consultar_mesas_examen
+
+  - story: 010 partial dates invalid subject stays in form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: consultar_fechas_parciales
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: fechas_parciales_form
+      - active_loop: fechas_parciales_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: fechas_parciales_form
+      - active_loop: null
+      - action: action_consultar_fechas_parciales
+
+  - story: 010 registration invalid subject stays in existing form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: inscribirse_mesa_examen
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: inscripcion_mesa_form
+      - active_loop: inscripcion_mesa_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+
+  - story: 010 cancellation invalid subject stays in form
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66001"
+      - intent: cancelar_inscripcion_mesa_examen
+      - action: cancelar_mesa_form
+      - active_loop: cancelar_mesa_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Materia inexistente"
+      - action: cancelar_mesa_form
+      - active_loop: cancelar_mesa_form
+      - slot_was_set:
+          - materia: null
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "Física II"
+      - action: cancelar_mesa_form
+      - active_loop: null
+      - action: action_cancelar_inscripcion_mesa_examen
+

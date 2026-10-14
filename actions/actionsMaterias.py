@@ -32,14 +32,14 @@ class ActionConsultarMaterias(Action):
 
         if not is_authenticated:
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar tus materias cursadas. Por favor, inicia sesión primero.")
-            return [SlotSet("flujo_actual", None)]
+            return []
 
         # Obtener la matrícula del slot
         matricula = tracker.get_slot('matricula')
 
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus materias cursadas.")
-            return [SlotSet("flujo_actual", "consultar_materias")]
+            return []
 
         try:
             response = supabase.table("MateriaCursada").select('fecha_cursada, Materia(nombre)').eq("estudiante", matricula).execute()
@@ -48,7 +48,7 @@ class ActionConsultarMaterias(Action):
                 dispatcher.utter_message(
                     f"📚 No se encontraron registros de materias cursadas para la matrícula {matricula}."
                 )
-                return [SlotSet("flujo_actual", None)]
+                return []
 
             course_records = sorted(
                 response.data,
@@ -71,12 +71,12 @@ class ActionConsultarMaterias(Action):
             dispatcher.utter_message(
                 f"✅ Total de registros de cursada encontrados: {len(course_records)}"
             )
-            return [SlotSet("flujo_actual", None)]
+            return []
         except Exception as e:
             print(f"Error al consultar materias: {e}")
             dispatcher.utter_message("❌ Hubo un error al consultar tus materias cursadas. Por favor, intenta nuevamente más tarde.")
 
-        return [SlotSet("flujo_actual", None)]
+        return []
 
 class ActionConsultarNotas(Action):
 
@@ -96,7 +96,7 @@ class ActionConsultarNotas(Action):
 
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus notas.")
-            return [SlotSet("flujo_actual", "consultar_notas")]
+            return []
 
         # Convertir matrícula a entero
         try:
@@ -109,7 +109,7 @@ class ActionConsultarNotas(Action):
         materia = tracker.get_slot('materia')
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres consultar las notas.")
-            return [SlotSet("flujo_actual", "consultar_notas")]
+            return []
         try:
             catalog = subject_catalog.get_subjects()
             resolution_status, resolution = SubjectResolver().resolve(catalog, materia)
@@ -124,7 +124,7 @@ class ActionConsultarNotas(Action):
                     f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
                     "Por favor, indica cuál necesitas."
                 )
-                return [SlotSet("flujo_actual", "consultar_notas")]
+                return [SlotSet("materia", None)]
 
             canonical_code = resolution["codigo"]
             canonical_name = resolution["nombre"]
@@ -140,7 +140,7 @@ class ActionConsultarNotas(Action):
                 dispatcher.utter_message(
                     f"📊 No se encontraron notas registradas para la matrícula {matricula} en la materia '{canonical_name}'."
                 )
-                return [SlotSet("flujo_actual", None)]
+                return []
 
             dispatcher.utter_message(f"📊 **Notas de {canonical_name.upper()} para la matrícula {matricula}:**")
 
@@ -173,7 +173,7 @@ class ActionConsultarNotas(Action):
                 dispatcher.utter_message(f"• {nota_formateada} - {descripcion} - Fecha: {fecha_nota}")
 
             dispatcher.utter_message(f"✅ Total de notas encontradas: {len(response.data)}")
-            return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+            return [SlotSet("materia", None)]
         except Exception as e:
             print(f"Error al consultar notas: {e}")
             dispatcher.utter_message("❌ Hubo un error al consultar tus notas. Por favor, intenta nuevamente más tarde.")
@@ -193,19 +193,12 @@ class ActionConsultarRequerimientosMateria(Action):
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar los requerimientos de las materias. Por favor, inicia sesión primero.")
             return []
 
-        # Obtener la matrícula del slot
-        matricula = tracker.get_slot('matricula')
-
-        if not matricula:
-            dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar los requerimientos de las materias.")
-            return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
-
         # Obtener la materia del slot
         materia = tracker.get_slot('materia')
 
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres consultar los requerimientos.")
-            return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
+            return []
 
         try:
             # Resolver la expresión contra el catálogo canónico completo.
@@ -222,7 +215,7 @@ class ActionConsultarRequerimientosMateria(Action):
                     f"❓ Encontré varias materias que coinciden con '{materia}': {options}. "
                     "Por favor, indica cuál necesitas."
                 )
-                return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
+                return [SlotSet("materia", None)]
 
             materia_codigo = resolution["codigo"]
             materia_nombre = resolution["nombre"]
@@ -232,7 +225,7 @@ class ActionConsultarRequerimientosMateria(Action):
 
             if not requerimientos_resp.data:
                 dispatcher.utter_message(f"❌ No se encontraron requerimientos para la materia '{materia_nombre}'.")
-                return [SlotSet("flujo_actual", None)]
+                return []
 
             dispatcher.utter_message(f"📊 **Requerimientos de {materia_nombre.upper()}:**")
 
@@ -241,7 +234,7 @@ class ActionConsultarRequerimientosMateria(Action):
                 dispatcher.utter_message(f"• **{nombre_materia_equivalencia}**")
 
             dispatcher.utter_message(f"✅ Total de requerimientos encontrados: {len(requerimientos_resp.data)}")
-            return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+            return [SlotSet("materia", None)]
         except Exception as e:
             print(f"Error al consultar requerimientos de la materia: {e}")
             dispatcher.utter_message("❌ Hubo un error al consultar los requerimientos de la materia. Por favor, intenta nuevamente más tarde.")

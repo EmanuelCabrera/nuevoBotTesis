@@ -28,7 +28,6 @@ stories:
       - active_loop: null
       - action: action_inscripcion_mesa_examen
       - slot_was_set:
-          - flujo_actual: null
           - materia: null
           - fecha_mesa: null
 
@@ -66,7 +65,6 @@ stories:
       - active_loop: null
       - action: action_inscripcion_mesa_examen
       - slot_was_set:
-          - flujo_actual: null
           - materia: null
           - fecha_mesa: null
 
@@ -90,5 +88,4 @@ stories:
       - active_loop: null
       - action: action_cancelar_inscripcion_mesa_examen
       - slot_was_set:
-          - flujo_actual: null
           - materia: null

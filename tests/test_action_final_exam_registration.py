@@ -365,7 +365,6 @@ class FinalExamRegistrationActionBaselineTests(unittest.TestCase):
         }, backend)
         self.assertEqual(backend.inserted[0][1]["estudiante"], "66001")
         self.assertEqual(backend.inserted[0][1]["codigo_mesa"], "M1")
-        self.assertIn(("flujo_actual", None), _events(events))
         self.assertIn(("codigo_mesa_examen", None), _events(events))
 
     def test_register_duplicate_does_not_insert(self):
@@ -380,7 +379,7 @@ class FinalExamRegistrationActionBaselineTests(unittest.TestCase):
         }, backend)
         self.assertFalse(backend.inserted)
         self.assertIn("Ya estás inscrito", self.dispatcher.messages[0])
-        self.assertIn(("flujo_actual", None), _events(events))
+        self.assertIn(("codigo_mesa_examen", None), _events(events))
 
     def test_register_cancelled_previous_registration_keeps_current_duplicate_semantics(self):
         backend = _Backend({
