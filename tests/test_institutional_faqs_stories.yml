@@ -1,0 +1,101 @@
+version: "3.1"
+
+stories:
+  - story: FAQ requisitos de inscripción
+    steps:
+      - intent: requisitos_inscripcion
+      - action: utter_respuesta_requisito_inscripcion
+
+  - story: FAQ plazos de inscripción
+    steps:
+      - intent: plazos_inscripcion
+      - action: utter_respuesta_plazos_inscripcion
+
+  - story: FAQ evaluación CONEAU
+    steps:
+      - intent: evaluacion_coneau
+      - action: utter_respuesta_evaluacion_coneau
+
+  - story: FAQ curso de ingreso
+    steps:
+      - intent: curso_ingreso
+      - action: utter_respuesta_curso_ingreso
+
+  - story: FAQ modalidad de inscripción
+    steps:
+      - intent: informar_modalidad_inscripcion
+      - action: utter_respuesta_informar_modalidad_inscripcion
+
+  - story: FAQ visitas
+    steps:
+      - intent: visitas_consultas
+      - action: utter_respuesta_visitas_consultas
+
+  - story: FAQ becas
+    steps:
+      - intent: informar_becas_hermanos
+      - action: utter_respuesta_informar_becas_hermanos
+
+  - story: FAQ horarios para trabajadores
+    steps:
+      - intent: informar_horarios_trabajadores
+      - action: utter_respuesta_informar_horarios_trabajadores
+
+  - story: FAQ intercambio
+    steps:
+      - intent: informar_intercambio_de_estudio
+      - action: utter_respuesta_intercambio_de_estudio
+
+  - story: FAQ equivalencias
+    steps:
+      - intent: informar_equivalencias
+      - action: utter_respuesta_equivalencias
+
+  - story: FAQ exámenes y recuperatorios
+    steps:
+      - intent: informar_examen_recuperatorio
+      - action: utter_respuesta_examen_recuperatorio
+
+  - story: FAQ régimen de asistencia
+    steps:
+      - intent: informar_asistencia
+      - action: utter_respuesta_asistencia
+
+  - story: FAQ apoyo en informática e inglés
+    steps:
+      - intent: informar_ayuda_informatica_ingles
+      - action: utter_respuesta_informar_ayuda_informatica_ingles
+
+  - story: FAQ nivel de profesores
+    steps:
+      - intent: informar_nivel_profesores
+      - action: utter_respuesta_informar_nivel_profesores
+
+  - story: FAQ equipamiento tecnológico
+    steps:
+      - intent: informar_equipamiento_tecnologico
+      - action: utter_respuesta_informar_equipamiento_tecnologico
+
+  - story: FAQ servicios
+    steps:
+      - intent: informar_servicios
+      - action: utter_respuesta_informar_servicios
+
+  - story: FAQ contactos
+    steps:
+      - intent: contactos
+      - action: utter_contactos
+
+  - story: FAQ después de saludo
+    steps:
+      - intent: saludo
+      - action: utter_saludo
+      - intent: curso_ingreso
+      - action: utter_respuesta_curso_ingreso
+
+  - story: FAQs explícitas repetidas
+    steps:
+      - intent: contactos
+      - action: utter_contactos
+      - intent: informar_servicios
+      - action: utter_respuesta_informar_servicios
