@@ -980,7 +980,9 @@ nlu:
       - dime las fechas para rendir examen final de [historia](materia)
       - quiero saber las fechas para rendir examen final de [algebra](materia)
       - si no puedo rendir esta vez, cuándo es la próxima mesa de [Física II](materia)
-      - no sé si voy a presentarme, qué fecha tiene el final de [Lengua y Comunicación](materia)
+      - no sé si voy a presentarme, qué fecha tiene el examen final de [Lengua y Comunicación](materia)
+      - qué fecha tiene el final de [Física](materia)
+      - qué fecha tiene el final de [Matemática](materia)
       - cuándo podría rendir el próximo final de [Redes de Computadoras II](materia)
       - cuando puedo rendir examen final de [quimica](materia)
       - cuales son las fechas de mesas de examen de [biologia](materia)
@@ -1042,6 +1044,10 @@ nlu:
       - quiero consultar el próximo final de [Álgebra](materia)
       - cuándo se toma la mesa de [redes de computadoras ii](materia), necesito la fecha
       - qué día es el final de [Algoritmos y Estructuras II](materia)?
+      - qué día es el examen final de [Algoritmos y Estructuras II](materia)
+      - qué día es el final de [Física](materia)
+      - qué día es el final de [Matemática](materia)
+      - qué día se rinde el final de [Algoritmos y Estructuras II](materia)
       - mesa de [Álgebra y Geometría Analítica](materia): cuándo se realiza
       - para [Análisis Matemático II](materia), cuáles son las fechas de final
       - necesito el día de la mesa de [Redes de Computadoras I](materia), por favor
@@ -1053,6 +1059,16 @@ nlu:
       - mesa examinadora de [Lengua y Comunicación](materia), qué fecha tiene
       - qué día es la mesa de [Lengua y Comunicación](materia)
       - una mesa examinadora, qué fecha tiene
+      - mesa final de [Física I](materia)
+      - mesa final de [Física II](materia)
+      - mesa final de [Matemática](materia)
+      - mesa final de [Redes de Computadoras 1](materia)
+      - ¿Y cuándo es el final de [Física II](materia)?
+      - y cuándo es el final de [Física II](materia)?
+      - cuándo es el final de [Física II](materia)?
+      - cuándo es el final de [Física I](materia)?
+      - cuándo es el final de [Matemática](materia)?
+      - cuándo es el final de [Redes de Computadoras 1](materia)
   - intent: proporcionar_materia
     examples: |
       - La materia para inscribirme es [Física II](materia)
@@ -1270,13 +1286,16 @@ nlu:
       - quiero asegurar mi lugar para rendir [Análisis Matemático I](materia)
       - deseo anotarme al examen final de [Física III](materia)
       - aunque antes no iba a rendir, ahora quiero anotarme al final de [Física II](materia)
-      - decidí presentarme al examen final de [Lengua y Comunicación](materia) y quiero inscribirme
+      - decidí presentarme al examen final de [Lengua y Comunicación](materia), y quiero inscribirme
+      - decidí presentarme al examen final de [Física](materia) y quiero inscribirme
       - finalmente voy a rendir [Análisis Matemático II](materia), anotame a la mesa
       - necesito hacer la inscripción para la mesa de [Algoritmos y Estructuras II](materia)
       - quiero registrarme para presentar el final de [Álgebra](materia)
       - necesito hacer el registro para rendir [Física II](materia)
       - dónde me registro para dar el examen final de [Redes de Computadoras I](materia)
-      - quiero dar de alta mi registro para rendir el final de [Física I](materia)
+      - quiero dar de alta mi registro para rendir el examen final de [Física I](materia)
+      - rendir el final de [Física](materia)
+      - rendir el final de [Matemática](materia)
       - quiero reservar una mesa para presentarme al final de [Álgebra](materia)
       - Quiero inscribirme al final de [Física II](materia)
       - Quiero inscribirme al final de [Redes de Computadoras 1](materia)
