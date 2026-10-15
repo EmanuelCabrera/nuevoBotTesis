@@ -162,6 +162,10 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
 
     def run_action(self, slots, backend):
         ACTION_MODULE.supabase = backend
+        ACTION_MODULE.subject_catalog = ACTION_MODULE.SubjectCatalogRepository(
+            lambda: ACTION_MODULE.supabase,
+            ttl_seconds=600,
+        )
         tracker = _Tracker(slots)
         return self.action.run(self.dispatcher, tracker, {})
 
