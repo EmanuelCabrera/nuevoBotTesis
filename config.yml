@@ -47,4 +47,5 @@ policies:
   epochs: 75
   batch_size: 128
   evaluate_every_number_of_epochs: 10
+  constrain_similarities: true
 assistant_id: 20231121-211621-relaxed-bookshelf
