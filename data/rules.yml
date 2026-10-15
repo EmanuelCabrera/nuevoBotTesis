@@ -232,23 +232,6 @@ rules:
       - action: action_cancelar_inscripcion_mesa_examen
 
 
-  - rule: continuar consultar materias tras matricula
-    condition:
-      - slot_was_set:
-          - flujo_actual: consultar_materias
-    steps:
-      - action: action_consultar_materias
-
-
-
-  - rule: continuar consultar requerimientos tras matricula
-    condition:
-      - slot_was_set:
-          - flujo_actual: consultar_requerimientos_materia
-    steps:
-      - action: action_consultar_requerimientos_materia
-
-
   - rule: consultar asistencia con matrícula y materia existentes
     condition:
       - slot_was_set:
@@ -266,15 +249,6 @@ rules:
       - action: asistencia_form
       - active_loop: null
       - action: action_consultar_asistencia
-
-  - rule: continuar consultar asistencia tras materia
-    condition:
-      - slot_was_set:
-          - flujo_actual: consultar_asistencia
-    steps:
-      - action: asistencia_form
-      - active_loop: asistencia_form
-
 
   ## Eliminado: ahora asistencia se gestiona con asistencia_form
 

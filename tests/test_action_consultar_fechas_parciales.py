@@ -100,7 +100,7 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
 
     def slots(self, materia="Física I", matricula="66001", authenticated=True):
         return {"is_authenticated": authenticated, "matricula": matricula,
-                "materia": materia, "flujo_actual": "consultar_fechas_parciales"}
+                "materia": materia}
 
     def test_authentication_is_required(self):
         backend = _Backend()
@@ -108,15 +108,15 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
         self.assertIn("Necesitas estar autenticado", self.dispatcher.messages[0])
         self.assertFalse(backend.calls)
 
-    def test_missing_matricula_preserves_flow(self):
+    def test_missing_matricula_is_reported(self):
         events = self.run_action(self.slots(matricula=None), _Backend())
         self.assertIn("número de matrícula", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"flujo_actual": "consultar_fechas_parciales"})
+        self.assertEqual(_event_dict(events), {})
 
-    def test_missing_materia_preserves_flow(self):
+    def test_missing_materia_is_reported(self):
         events = self.run_action(self.slots(materia=None), _Backend())
         self.assertIn("materia especificada", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"flujo_actual": "consultar_fechas_parciales"})
+        self.assertEqual(_event_dict(events), {})
 
     def test_exact_subject_queries_partial_code_and_returns_date(self):
         backend = _Backend({"Parciales": [{"id": 1, "fecha_parcial": "2025-08-19", "materia_codigo": "FIS1"}]})
@@ -137,7 +137,7 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
         events = self.run_action(self.slots(), _Backend())
         self.assertIn("No se encontraron fechas", self.dispatcher.messages[0])
         self.assertNotIn("No se encontró la materia", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"flujo_actual": None, "materia": None})
+        self.assertEqual(_event_dict(events), {"materia": None})
 
     def test_invalid_subject_does_not_query_partials(self):
         backend = _Backend()
@@ -164,7 +164,7 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
         backend = _Backend()
         events = self.run_action(self.slots(materia="fisica 4"), backend)
         self.assertIn("No se encontró la materia", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"materia": None, "flujo_actual": "consultar_fechas_parciales"})
+        self.assertEqual(_event_dict(events), {"materia": None})
 
     def test_ambiguous_subject_should_not_select_first_match(self):
         backend = _Backend({"Materia": [
@@ -181,7 +181,7 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
             {"codigo": "FISE", "nombre": "Física Experimental"},
         ]})
         events = self.run_action(self.slots(materia="Física"), backend)
-        self.assertEqual(_event_dict(events), {"materia": None, "flujo_actual": "consultar_fechas_parciales"})
+        self.assertEqual(_event_dict(events), {"materia": None})
 
     def test_backend_catalog_error_is_controlled(self):
         backend = _Backend(errors={"Materia": RuntimeError("catalog unavailable")})
@@ -193,10 +193,10 @@ class PartialExamDatesActionBaselineTests(unittest.TestCase):
         self.run_action(self.slots(), backend)
         self.assertIn("Hubo un error", self.dispatcher.messages[0])
 
-    def test_success_clears_subject_and_flow(self):
+    def test_success_clears_subject(self):
         backend = _Backend({"Parciales": [{"fecha_parcial": "2025-08-19", "materia_codigo": "FIS1"}]})
         events = self.run_action(self.slots(), backend)
-        self.assertEqual(_event_dict(events), {"flujo_actual": None, "materia": None})
+        self.assertEqual(_event_dict(events), {"materia": None})
 
 
 if __name__ == "__main__": unittest.main()

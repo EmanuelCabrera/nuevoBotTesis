@@ -98,7 +98,6 @@ class FinalExamDatesActionBaselineTests(unittest.TestCase):
                 {
                     "is_authenticated": authenticated,
                     "materia": materia,
-                    "flujo_actual": "consultar_fecha_mesas_examen_final",
                 }
             ),
             {},
@@ -151,14 +150,13 @@ class FinalExamDatesActionBaselineTests(unittest.TestCase):
         self.assertFalse(any(call[:2] == ("MesaExamen", "table") for call in backend.calls))
         self.assertTrue(any("especific" in message.lower() for message in self.dispatcher.messages))
 
-    def test_ambiguous_subject_preserves_flow_and_clears_unresolved_value(self):
+    def test_ambiguous_subject_clears_unresolved_value(self):
         backend = _Backend({"Materia": [
             {"codigo": "FISA", "nombre": "Física Aplicada"},
             {"codigo": "FISE", "nombre": "Física Experimental"},
         ]})
         events = self.run_action("Física", backend)
-        self.assertIn(("flujo_actual", "consultar_fecha_mesas_examen_final"), _events(events))
-        self.assertIn(("materia", None), _events(events))
+        self.assertEqual(_events(events), {("materia", None)})
 
     def test_valid_subject_without_mesas_is_distinct(self):
         backend = _Backend()
@@ -167,7 +165,6 @@ class FinalExamDatesActionBaselineTests(unittest.TestCase):
         self.assertIn("No se encontraron mesas", output)
         self.assertNotIn("No se encontró la materia", output)
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", None), _events(events))
 
     def test_one_mesa_returns_code_and_date(self):
         backend = _Backend({"MesaExamen": [{"codigo": "M1", "fecha": "2025-08-10", "materia_codigo": "FIS1"}]})
@@ -205,7 +202,6 @@ class FinalExamDatesActionBaselineTests(unittest.TestCase):
         backend = _Backend({"MesaExamen": [{"codigo": "M1", "fecha": "2025-08-10", "materia_codigo": "FIS1"}]})
         events = self.run_action("Física I", backend)
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", None), _events(events))
 
 
 if __name__ == "__main__": unittest.main()

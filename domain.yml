@@ -47,7 +47,6 @@ entities:
   - auth_token
   - codigo_mesa_examen
   - fecha_mesa
-  - flujo_actual
 slots:
   is_authenticated:
     type: bool
@@ -85,11 +84,6 @@ slots:
     mappings:
       - type: from_entity
         entity: fecha_mesa
-  flujo_actual:
-    type: text
-    influence_conversation: true
-    mappings:
-      - type: custom
 responses:
   utter_saludo:
     - text: |
@@ -269,7 +263,13 @@ actions:
   - action_consultar_notas
   - action_consultar_requerimientos_materia
   - action_consultar_mesas_examen
+  - validate_asistencia_form
+  - validate_notas_form
+  - validate_requisitos_form
+  - validate_consultar_mesas_form
   - validate_inscripcion_mesa_form
+  - validate_cancelar_mesa_form
+  - validate_fechas_parciales_form
   - action_inscripcion_mesa_examen
   - action_cancelar_inscripcion_mesa_examen
   - action_consultar_fechas_parciales
