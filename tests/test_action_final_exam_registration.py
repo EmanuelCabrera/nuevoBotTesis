@@ -190,29 +190,51 @@ class FinalExamRegistrationActionBaselineTests(unittest.TestCase):
         )
         return action.run(self.dispatcher, _Tracker(slots), {})
 
+    def configure_backend(self, backend):
+        ACTION_MODULE.supabase = backend
+        ACTION_MODULE.subject_catalog = ACTION_MODULE.SubjectCatalogRepository(
+            lambda: ACTION_MODULE.supabase,
+            ttl_seconds=600,
+        )
+
     def offer(self, slots, backend):
-        return self.run_action(ACTION_MODULE.ActionOfrecerMesasExamen(), slots, backend)
+        self.configure_backend(backend)
+        return ACTION_MODULE.ValidateInscripcionMesaForm().validate_materia(
+            slots.get("materia"), self.dispatcher, _Tracker(slots), {}
+        )
+
+    def validate_matricula(self, slot_value, slots, backend):
+        self.configure_backend(backend)
+        return ACTION_MODULE.ValidateInscripcionMesaForm().validate_matricula(
+            slot_value, self.dispatcher, _Tracker(slots), {}
+        )
 
     def register(self, slots, backend):
         return self.run_action(ACTION_MODULE.ActionInscripcionMesaExamen(), slots, backend)
 
     def test_offer_requires_authentication(self):
         backend = _Backend()
-        self.offer({"is_authenticated": False, "matricula": "66001", "materia": "Física I"}, backend)
+        result = self.validate_matricula(
+            "66001", {"is_authenticated": False}, backend
+        )
         self.assertIn("Necesitas estar autenticado", self.dispatcher.messages[0])
+        self.assertEqual({"matricula": None}, result)
         self.assertFalse(backend.calls)
 
     def test_offer_requires_matricula_and_preserves_flow(self):
         backend = _Backend()
-        events = self.offer({"is_authenticated": True, "materia": "Física I"}, backend)
+        result = self.validate_matricula(None, {"is_authenticated": True}, backend)
         self.assertIn("número de matrícula", self.dispatcher.messages[0])
-        self.assertIn(("flujo_actual", "inscripcion_mesa_examen"), _events(events))
+        self.assertEqual({"matricula": None}, result)
 
     def test_offer_requires_subject_and_preserves_flow(self):
         backend = _Backend()
-        events = self.offer({"is_authenticated": True, "matricula": "66001"}, backend)
+        result = self.offer(
+            {"is_authenticated": True, "matricula": "66001", "materia": None},
+            backend,
+        )
         self.assertIn("materia", self.dispatcher.messages[0].lower())
-        self.assertIn(("flujo_actual", "inscripcion_mesa_examen"), _events(events))
+        self.assertEqual({"materia": None}, result)
 
     def test_offer_lists_one_available_table(self):
         backend = _Backend({"MesaExamen": [{"codigo": "M1", "fecha": "2025-08-10", "materia_codigo": "FIS1"}]})

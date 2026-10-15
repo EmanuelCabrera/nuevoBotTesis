@@ -76,6 +76,9 @@ class RequirementsActionCharacterizationTests(unittest.TestCase):
     def setUp(self): self.action, self.dispatcher = ACTION_MODULE.ActionConsultarRequerimientosMateria(), _Dispatcher()
     def run_action(self, slots, backend):
         ACTION_MODULE.supabase = backend
+        ACTION_MODULE.subject_catalog = ACTION_MODULE.SubjectCatalogRepository(
+            lambda: ACTION_MODULE.supabase
+        )
         return self.action.run(self.dispatcher, _Tracker(slots), {})
 
     def test_successful_lookup_returns_one_direct_requirement_and_canonical_names(self):

@@ -906,6 +906,22 @@ nlu:
       - cuántas faltas tengo anotadas
       - cómo está mi asistencia actual
       - cuál es mi porcentaje personal de asistencia
+      - ¿Cuántas faltas tengo en [Física](materia)?
+      - ¿Cuántas faltas tengo en [Redes de Computadoras 1](materia)?
+      - ¿Cuántas faltas tengo en [Matemática](materia)?
+      - cuántas faltas tengo en [Física](materia)
+      - cuántas faltas tengo en [Redes de Computadoras 1](materia)
+      - cuántas faltas tengo en [Matemática](materia)
+      - decime cuántas faltas tengo en [Redes de Computadoras 1](materia)
+      - quiero saber cuántas faltas tengo en [Redes de Computadoras 1](materia)
+      - cuántas ausencias tengo en [Redes de Computadoras 1](materia)
+      - cuántas inasistencias tengo en [Redes de Computadoras 1](materia)
+      - ¿Cuántas faltas tengo para [Redes de Computadoras 1](materia)?
+      - a [Redes de Computadoras 1](materia) cuántas veces asistí
+      - cuántas clases falté en [Redes de Computadoras 1](materia)
+      - cuántas veces falté a [Redes de Computadoras 1](materia)
+      - ¿Cómo estoy de asistencia en [Redes de Computadoras 1](materia)?
+      - ¿Qué porcentaje de asistencia tengo en [Redes de Computadoras 1](materia)?
   - intent: consultar_fecha_mesas_examen_final
     examples: |
       - quiero ver las fechas de examen final
@@ -987,6 +1003,9 @@ nlu:
       - quiero consultar las fechas para rendir examen final de [ingles](materia)
       - dime las fechas para rendir examen final de [historia](materia)
       - quiero saber las fechas para rendir examen final de [algebra](materia)
+      - si no puedo rendir esta vez, cuándo es la próxima mesa de [Física II](materia)
+      - no sé si voy a presentarme, qué fecha tiene el final de [Lengua y Comunicación](materia)
+      - cuándo podría rendir el próximo final de [Redes de Computadoras II](materia)
       - cuando puedo rendir examen final de [quimica](materia)
       - cuales son las fechas de mesas de examen de [biologia](materia)
       - necesito ver las fechas de mesas de examen de [literatura](materia)
@@ -1158,7 +1177,12 @@ nlu:
       - de [Matemática](materia)
       - de [Programación](materia)
       - de [Redes de Computadoras 1](materia)
+      - de [Redes de Computadoras 2](materia)
+      - de [Diseño de Sistemas](materia)
       - de [Análisis Matemático 1](materia)
+      - en [Redes de Computadoras 1](materia)
+      - para [Redes de Computadoras 1](materia)
+      - es de [Redes de Computadoras 1](materia)
       - la materia es [Física](materia)
       - la materia es [Matemática](materia)
       - la materia es [fisica](materia)
@@ -1269,12 +1293,24 @@ nlu:
       - registrame en la mesa de [Redes de Computadoras II](materia)
       - quiero asegurar mi lugar para rendir [Análisis Matemático I](materia)
       - deseo anotarme al examen final de [Física III](materia)
+      - aunque antes no iba a rendir, ahora quiero anotarme al final de [Física II](materia)
+      - decidí presentarme al examen final de [Lengua y Comunicación](materia) y quiero inscribirme
+      - finalmente voy a rendir [Análisis Matemático II](materia), anotame a la mesa
       - necesito hacer la inscripción para la mesa de [Algoritmos y Estructuras II](materia)
       - quiero registrarme para presentar el final de [Álgebra](materia)
       - necesito hacer el registro para rendir [Física II](materia)
       - dónde me registro para dar el examen final de [Redes de Computadoras I](materia)
       - quiero dar de alta mi registro para rendir el final de [Física I](materia)
       - quiero reservar una mesa para presentarme al final de [Álgebra](materia)
+      - Quiero inscribirme al final de [Física II](materia)
+      - Quiero inscribirme al final de [Redes de Computadoras 1](materia)
+      - Quiero inscribirme al final de [Álgebra](materia)
+      - Quiero inscribirme al final de [Matemática](materia)
+      - me quiero inscribir al final de [Física II](materia)
+      - me quiero inscribir al final de [Redes de Computadoras 1](materia)
+      - quiero inscribirme al final de [Física](materia)
+      - inscribirme al final de [Física II](materia)
+      - inscribirme al final de [Redes de Computadoras 1](materia)
       - La materia para inscribirme es [matematica](materia)
       - Quiero inscribirme a la mesa de [fisica](materia)
       - Me quiero anotar a la mesa de [programacion](materia)
@@ -1345,11 +1381,22 @@ nlu:
       - no voy a rendir el final de [Física I](materia), quiero cancelar
       - ya no voy a presentarme al examen final de [Álgebra](materia), quiero cancelar
       - decidí no rendir la mesa de [Redes de Computadoras II](materia) y dar de baja la inscripción
+      - al final no voy a rendir [Programación Avanzada](materia)
+      - decidí no presentarme a la mesa de [Física III](materia)
+      - no me voy a presentar al examen final de [Análisis de Sistemas](materia)
+      - ya no pienso rendir el final de [Ingeniería de Software](materia)
+      - finalmente no rindo la mesa de [Cálculo Numérico](materia)
+      - no podré presentarme al final de [Investigación Operativa](materia)
+      - cambié de idea y no voy a rendir [Inteligencia Artificial I](materia)
+      - quiero bajarme porque no me presentaré a [Proyectos Informáticos](materia)
       - ¿Puedo cancelar mi inscripción a la mesa de examen?
       - ¿Cómo cancelo mi inscripción a la mesa?
       - Dar de baja inscripción
       - Cancelar inscripción
       - Baja de mesa de examen
+      - necesito dar de baja la mesa de [Álgebra y Geometría Analítica](materia)
+      - desanotame de la mesa de [Análisis Matemático II](materia)
+      - quiero anular mi inscripción para [Algoritmos y Estructuras II](materia)
   - regex: codigo_mesa_examen
     examples: |
       - COD[0-9]{4}

@@ -21,7 +21,6 @@ stories:
       - action: inscripcion_mesa_form
       - active_loop: null
       - action: action_inscripcion_mesa_examen
-
   - story: inscripción B - solicitud sin datos activa el formulario
     steps:
       - slot_was_set:
@@ -86,4 +85,3 @@ stories:
       - action: inscripcion_mesa_form
       - active_loop: null
       - action: action_inscripcion_mesa_examen
-

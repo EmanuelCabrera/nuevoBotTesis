@@ -253,7 +253,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
 
         self.assertEqual(len(self.dispatcher.messages), 1)
         self.assertIn("No se encontró la materia 'Astrofísica'", self.dispatcher.messages[0])
-        self.assertEqual(_events_as_dict(events), {"flujo_actual": None})
+        self.assertEqual(_events_as_dict(events), {"materia": None})
         self.assertNotIn(("Asistencia", "table"), backend.calls)
 
     def test_no_attendance_records(self):
