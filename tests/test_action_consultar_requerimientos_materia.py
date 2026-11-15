@@ -101,15 +101,15 @@ class RequirementsActionCharacterizationTests(unittest.TestCase):
         b = _Backend(); self.run_action({"is_authenticated": False, "matricula": "66007", "materia": "fisica"}, b)
         self.assertIn("Necesitas estar autenticado", self.dispatcher.messages[0])
 
-    def test_matricula_is_required_and_flow_is_preserved(self):
+    def test_matricula_is_not_required_for_curricular_lookup(self):
         b = _Backend(); events = self.run_action({"is_authenticated": True, "materia": "fisica"}, b)
-        self.assertIn("No tengo tu número de matrícula", self.dispatcher.messages[0])
-        self.assertIn(("flujo_actual", "consultar_requerimientos_materia"), _events(events))
+        self.assertNotIn("matrícula", "\n".join(self.dispatcher.messages))
+        self.assertTrue(any(c[:2] == ("MateriaEquivalencia", "table") for c in b.calls))
 
-    def test_materia_is_required_and_flow_is_preserved(self):
+    def test_materia_is_required(self):
         b = _Backend(); events = self.run_action({"is_authenticated": True, "matricula": "66007"}, b)
         self.assertIn("No tengo la materia especificada", self.dispatcher.messages[0])
-        self.assertIn(("flujo_actual", "consultar_requerimientos_materia"), _events(events))
+        self.assertEqual(events, [])
 
     def test_valid_subject_with_no_requirements_is_distinct(self):
         b = _Backend({"MateriaEquivalencia": []}, materia=[{"codigo": "FIS2", "nombre": "Física II"}])
@@ -139,10 +139,10 @@ class RequirementsActionCharacterizationTests(unittest.TestCase):
         self.run_action({"is_authenticated": True, "matricula": "66007", "materia": "Física"}, b)
         self.assertFalse(any(c[:2] == ("MateriaEquivalencia", "table") for c in b.calls))
 
-    def test_success_clears_materia_and_flow(self):
+    def test_success_clears_materia(self):
         b = _Backend({"MateriaEquivalencia": [{"equivalencia_codigo": "FIS1", "Materia": {"nombre": "Física I"}}]})
         events = self.run_action({"is_authenticated": True, "matricula": "66007", "materia": "Física II"}, b)
-        self.assertIn(("materia", None), _events(events)); self.assertIn(("flujo_actual", None), _events(events))
+        self.assertEqual(_events(events), {("materia", None)})
 
     def test_only_direct_relationships_are_returned(self):
         b = _Backend({"MateriaEquivalencia": [{"equivalencia_codigo": "FIS1", "Materia": {"nombre": "Física I"}}]})

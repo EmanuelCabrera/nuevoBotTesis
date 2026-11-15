@@ -128,14 +128,14 @@ class CourseRecordsActionTests(unittest.TestCase):
         )
         self.assertIn("autenticado", self.dispatcher.messages[0])
         self.assertEqual(backend.calls, [])
-        self.assertEqual(_events(events), {"flujo_actual": None})
+        self.assertEqual(_events(events), {})
 
-    def test_missing_matricula_preserves_legacy_flow_marker(self):
+    def test_missing_matricula_is_reported_without_querying(self):
         backend = _Backend()
         events = self.run_action({"is_authenticated": True}, backend)
         self.assertIn("matrícula", self.dispatcher.messages[0])
         self.assertEqual(backend.calls, [])
-        self.assertEqual(_events(events), {"flujo_actual": "consultar_materias"})
+        self.assertEqual(_events(events), {})
 
     def test_one_row_uses_student_filter_and_related_canonical_name(self):
         backend = _Backend({"MateriaCursada": [{
@@ -155,7 +155,7 @@ class CourseRecordsActionTests(unittest.TestCase):
         self.assertIn("2025-03-01", output)
         self.assertIn("Registros de materias cursadas", output)
         self.assertIn("Total de registros de cursada encontrados: 1", output)
-        self.assertEqual(_events(events), {"flujo_actual": None})
+        self.assertEqual(_events(events), {})
 
     def test_multiple_rows_are_ordered_by_date_then_canonical_name(self):
         backend = _Backend({"MateriaCursada": [
@@ -206,15 +206,15 @@ class CourseRecordsActionTests(unittest.TestCase):
             backend,
         )
         self.assertIn("No se encontraron registros de materias cursadas", self.dispatcher.messages[0])
-        self.assertEqual(_events(events), {"flujo_actual": None})
+        self.assertEqual(_events(events), {})
 
-    def test_backend_failure_is_controlled_and_cleans_flow_state(self):
+    def test_backend_failure_is_controlled(self):
         backend = _Backend(errors={"MateriaCursada": RuntimeError("unavailable")})
         events = self.run_action(
             {"is_authenticated": True, "matricula": "66001"}, backend
         )
         self.assertIn("error", self.dispatcher.messages[0].lower())
-        self.assertEqual(_events(events), {"flujo_actual": None})
+        self.assertEqual(_events(events), {})
 
     def test_subject_catalog_and_resolver_are_not_queried(self):
         backend = _Backend({"MateriaCursada": []})

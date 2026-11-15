@@ -30,7 +30,6 @@ def _registration_retry_events(clear_mesa=True):
     events = []
     if clear_mesa:
         events.extend([SlotSet("codigo_mesa_examen", None), SlotSet("fecha_mesa", None)])
-    events.append(SlotSet("flujo_actual", "inscripcion_mesa_examen"))
     return events
 
 
@@ -38,12 +37,11 @@ def _cancellation_retry_events(clear_subject=False):
     events = []
     if clear_subject:
         events.append(SlotSet("materia", None))
-    events.append(SlotSet("flujo_actual", "cancelar_inscripcion_mesa_examen"))
     return events
 
 
 def _cancellation_complete_events():
-    return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+    return [SlotSet("materia", None)]
 
 
 def _resolve_registration_subject(materia):
@@ -92,7 +90,6 @@ class ActionVerMesasExamen(Action):
                     "Por favor, especifica cuál necesitas."
                 )
                 return [
-                    SlotSet("flujo_actual", "consultar_fecha_mesas_examen_final"),
                     SlotSet("materia", None),
                 ]
 
@@ -103,7 +100,7 @@ class ActionVerMesasExamen(Action):
             mesas_resp = supabase.table("MesaExamen").select('fecha, codigo').eq("materia_codigo", materia_codigo).execute()
             if not mesas_resp.data:
                 dispatcher.utter_message(f"📅 No se encontraron mesas de examen para la materia '{nombre_materia}'.")
-                return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+                return [SlotSet("materia", None)]
 
             dispatcher.utter_message(f"📅 **Mesas de examen disponibles para {nombre_materia.upper()}:**")
             for idx, mesa in enumerate(mesas_resp.data, 1):
@@ -118,7 +115,7 @@ class ActionVerMesasExamen(Action):
                 )
             dispatcher.utter_message(f"✅ Se encontraron {len(mesas_resp.data)} mesa(s) de examen para {nombre_materia.upper()}")
             dispatcher.utter_message("💡 **Nota:** Estas son las fechas disponibles para la materia consultada.")
-            return [SlotSet("materia", None), SlotSet("flujo_actual", None)]
+            return [SlotSet("materia", None)]
 
         except Exception as e:
             print(f"Error al consultar mesas de examen: {e}")
@@ -297,7 +294,7 @@ class ActionInscripcionMesaExamen(Action):
             inscripcion_existente = supabase.table("Inscripcion").select('*').eq("estudiante", matricula).eq("codigo_mesa", codigo_mesa).execute()
             if inscripcion_existente.data:
                 dispatcher.utter_message(f"⚠️ Ya estás inscrito a la mesa de examen de **{nombre_materia}** (código: {codigo_mesa}) que se realizará el {fecha_mesa_final}.")
-                return [SlotSet("flujo_actual", None), SlotSet("materia", None), SlotSet("fecha_mesa", None), SlotSet("codigo_mesa_examen", None)]
+                return [SlotSet("materia", None), SlotSet("fecha_mesa", None), SlotSet("codigo_mesa_examen", None)]
             # Realizar la inscripción
             inscripcion_data = {
                 "estudiante": matricula,
@@ -315,7 +312,7 @@ class ActionInscripcionMesaExamen(Action):
                 dispatcher.utter_message(f"📅 Fecha del examen: {fecha_mesa_final}")
                 dispatcher.utter_message(f"🎓 Matrícula: {matricula}")
                 dispatcher.utter_message("📝 Recuerda presentarte con tu libreta y los materiales necesarios para el examen.")
-                return [SlotSet("flujo_actual", None), SlotSet("materia", None), SlotSet("fecha_mesa", None), SlotSet("codigo_mesa_examen", None)]
+                return [SlotSet("materia", None), SlotSet("fecha_mesa", None), SlotSet("codigo_mesa_examen", None)]
             else:
                 dispatcher.utter_message("❌ Hubo un problema al procesar tu inscripción. Por favor, intenta nuevamente.")
         except Exception as e:

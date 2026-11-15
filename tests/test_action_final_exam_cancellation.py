@@ -151,14 +151,14 @@ class FinalExamCancellationActionTests(unittest.TestCase):
         dispatcher, events = self.run_action({"materia": "fisica"}, b)
         self.assertIn("matrícula", dispatcher.messages[0])
         self.assertEqual(b.calls, [])
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(events, [])
 
     def test_requires_materia(self):
         b = self.backend()
         dispatcher, events = self.run_action({"matricula": "66001"}, b)
         self.assertIn("materia", dispatcher.messages[0])
         self.assertEqual(b.calls, [])
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(events, [])
 
     def test_active_registration_is_deleted(self):
         b = self.backend(registrations=[{"id": 1, "estudiante": "66001", "codigo_mesa": "M1", "baja": False}])
@@ -167,14 +167,12 @@ class FinalExamCancellationActionTests(unittest.TestCase):
         self.assertTrue(any("cancelada exitosamente" in message for message in dispatcher.messages))
         self.assertEqual(b.rows["Inscripcion"], [])
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", None), _events(events))
 
     def test_no_matching_registration_is_reported(self):
         b = self.backend()
         dispatcher, events = self.run_action({"matricula": "66001", "materia": "Física"}, b)
         self.assertTrue(any("No se encontró una inscripción activa" in message for message in dispatcher.messages))
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", None), _events(events))
 
     def test_baja_true_row_is_currently_deleted_too(self):
         b = self.backend(registrations=[{"id": 1, "estudiante": "66001", "codigo_mesa": "M1", "baja": True}])
@@ -196,13 +194,13 @@ class FinalExamCancellationActionTests(unittest.TestCase):
         self.assertTrue(any("No se encontró la materia" in message for message in dispatcher.messages))
         self.assertFalse(any(call[0] == "MesaExamen" for call in b.calls))
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(_events(events), {("materia", None)})
 
     def test_valid_subject_with_no_exam_tables_is_distinct(self):
         b = self.backend(mesas=[])
         dispatcher, events = self.run_action({"matricula": "66001", "materia": "Física"}, b)
         self.assertTrue(any("No se encontraron mesas" in message for message in dispatcher.messages))
-        self.assertIn(("flujo_actual", None), _events(events))
+        self.assertEqual(_events(events), {("materia", None)})
 
     def test_mesa_backend_failure_is_controlled(self):
         b = self.backend(errors={"MesaExamen": RuntimeError("mesa unavailable")})
@@ -252,19 +250,19 @@ class FinalExamCancellationActionTests(unittest.TestCase):
         self.assertFalse(any(call[0] == "MesaExamen" for call in b.calls))
         self.assertTrue(any("varias materias" in message for message in dispatcher.messages))
         self.assertIn(("materia", None), _events(events))
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(_events(events), {("materia", None)})
 
     def test_backend_failure_is_controlled(self):
         b = self.backend(errors={"Materia": RuntimeError("backend unavailable")})
         dispatcher, events = self.run_action({"matricula": "66001", "materia": "fisica"}, b)
         self.assertTrue(any("error" in message.lower() for message in dispatcher.messages))
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(events, [])
 
     def test_registration_backend_failure_is_controlled(self):
         b = self.backend(errors={"Inscripcion": RuntimeError("registration unavailable")})
         dispatcher, events = self.run_action({"matricula": "66001", "materia": "fisica"}, b)
         self.assertTrue(any("error" in message.lower() for message in dispatcher.messages))
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(events, [])
 
     def test_delete_backend_failure_is_controlled(self):
         b = self.backend(
@@ -276,7 +274,7 @@ class FinalExamCancellationActionTests(unittest.TestCase):
         dispatcher, events = self.run_action({"matricula": "66001", "materia": "fisica"}, b)
         self.assertTrue(any("error" in message.lower() for message in dispatcher.messages))
         self.assertEqual(len(b.rows["Inscripcion"]), 1)
-        self.assertIn(("flujo_actual", "cancelar_inscripcion_mesa_examen"), _events(events))
+        self.assertEqual(events, [])
 
 
 if __name__ == "__main__":

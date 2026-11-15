@@ -188,7 +188,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
         self.assertTrue(any("Asistencia en FÍSICA I" in message for message in self.dispatcher.messages))
         self.assertEqual(
             _events_as_dict(events),
-            {"flujo_actual": None, "materia": None},
+            {"materia": None},
         )
 
     def test_present_absent_total_and_percentage_calculation(self):
@@ -275,7 +275,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
 
         self.assertEqual(len(self.dispatcher.messages), 1)
         self.assertIn("No se encontraron registros de asistencia", self.dispatcher.messages[0])
-        self.assertEqual(_events_as_dict(events), {"flujo_actual": None})
+        self.assertEqual(_events_as_dict(events), {})
 
     def test_missing_required_data(self):
         cases = [
@@ -287,12 +287,12 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
             (
                 {"is_authenticated": True, "materia": "Física"},
                 "No tengo tu número de matrícula",
-                {"flujo_actual": "consultar_asistencia"},
+                {},
             ),
             (
                 {"is_authenticated": True, "matricula": "66001"},
                 "No tengo la materia especificada",
-                {"flujo_actual": "consultar_asistencia"},
+                {},
             ),
         ]
 
@@ -372,10 +372,10 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
         )
 
         self.assertTrue(any("varias materias" in message.lower() for message in self.dispatcher.messages))
-        self.assertEqual(_events_as_dict(events), {"flujo_actual": "consultar_asistencia", "materia": None})
+        self.assertEqual(_events_as_dict(events), {"materia": None})
         self.assertNotIn(("Asistencia", "table"), backend.calls)
 
-    def test_clarification_continues_original_attendance_flow(self):
+    def test_corrected_subject_can_be_processed_after_clarification(self):
         backend = _CatalogSupabase(
             rows={
                 "Materia": [
@@ -390,7 +390,7 @@ class ActionConsultarAsistenciaTests(unittest.TestCase):
             {"is_authenticated": True, "matricula": "66001", "materia": "Física"},
             backend,
         )
-        self.assertEqual(_events_as_dict(first_events), {"flujo_actual": "consultar_asistencia", "materia": None})
+        self.assertEqual(_events_as_dict(first_events), {"materia": None})
         backend.calls.clear()
         self.dispatcher = _CollectingDispatcher()
 
