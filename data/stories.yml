@@ -391,6 +391,111 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 1"
+      - slot_was_set:
+          - materia: "fisica 1"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: consultar requerimientos de materia con matricula luego proporcionar materia y seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+          - matricula: "66007"
+      - intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 2"
+      - slot_was_set:
+          - materia: "fisica 2"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 1"
+      - slot_was_set:
+          - materia: "fisica 1"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: consultar requerimientos de materia sin matricula y luego proporcionar materia con seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - intent: consultar_requerimientos_materia
+      - action: requisitos_form
+      - active_loop: requisitos_form
+      - slot_was_set:
+          - requested_slot: materia
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 2"
+      - slot_was_set:
+          - materia: "fisica 2"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 1"
+      - slot_was_set:
+          - materia: "fisica 1"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
+  - story: consultar requerimientos sin matricula y luego cambiar materia con seguimiento
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - intent: consultar_requerimientos_materia
+        entities:
+          - materia: "fisica 2"
+      - slot_was_set:
+          - materia: "fisica 2"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+      - slot_was_set:
+          - materia: null
+      - intent: proporcionar_materia
+        entities:
+          - materia: "fisica 1"
+      - slot_was_set:
+          - materia: "fisica 1"
+      - action: requisitos_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_requerimientos_materia
+
   - story: consultar notas y luego proporcionar materia
     steps:
       - slot_was_set:

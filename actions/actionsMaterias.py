@@ -98,9 +98,14 @@ class ActionConsultarNotas(Action):
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus notas.")
             return [SlotSet("flujo_actual", "consultar_notas")]
 
-        # Convertir matrícula a entero
+        # Validar y convertir matrícula a entero
+        matricula_str = str(matricula).strip()
+        if len(matricula_str) != 5 or not matricula_str.isdigit():
+            dispatcher.utter_message("❌ La matrícula debe ser un número de 5 dígitos (por ejemplo: 66001, 66022, 66007).")
+            return [SlotSet("matricula", None), SlotSet("flujo_actual", "consultar_notas")]
+
         try:
-            matricula = int(matricula)
+            matricula = int(matricula_str)
         except ValueError:
             dispatcher.utter_message("❌ El número de matrícula debe ser un número válido.")
             return []
@@ -192,13 +197,6 @@ class ActionConsultarRequerimientosMateria(Action):
         if not is_authenticated:
             dispatcher.utter_message("❌ Necesitas estar autenticado para consultar los requerimientos de las materias. Por favor, inicia sesión primero.")
             return []
-
-        # Obtener la matrícula del slot
-        matricula = tracker.get_slot('matricula')
-
-        if not matricula:
-            dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar los requerimientos de las materias.")
-            return [SlotSet("flujo_actual", "consultar_requerimientos_materia")]
 
         # Obtener la materia del slot
         materia = tracker.get_slot('materia')
