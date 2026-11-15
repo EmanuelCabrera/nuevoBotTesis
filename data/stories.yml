@@ -635,8 +635,6 @@ stories:
           - materia: fisica
       - action: asistencia_form
       - active_loop: asistencia_form
-      - slot_was_set:
-          - flujo_actual: consultar_asistencia
       - intent: proporcionar_matricula
         entities:
           - matricula: "66007"
@@ -644,8 +642,6 @@ stories:
           - matricula: "66007"
       - action: asistencia_form
       - active_loop: asistencia_form
-      - slot_was_set:
-          - flujo_actual: null
 
   - story: consultar asistencia y luego cambiar materia con seguimiento
     steps:

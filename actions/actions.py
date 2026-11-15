@@ -63,14 +63,14 @@ class ActionConsultarAsistencia(Action):
 
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tu asistencia.")
-            return [SlotSet("flujo_actual", "consultar_asistencia")]
+            return []
 
         # Obtener la materia del slot
         materia = tracker.get_slot('materia')
 
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres consultar la asistencia.")
-            return [SlotSet("flujo_actual", "consultar_asistencia")]
+            return []
 
         try:
             catalog_rows = subject_catalog.get_subjects()
@@ -81,7 +81,7 @@ class ActionConsultarAsistencia(Action):
                     f"❓ Encontré varias materias que coinciden con '{materia}': {names}. "
                     "Por favor, especifica cuál necesitas."
                 )
-                return [SlotSet("flujo_actual", "consultar_asistencia"), SlotSet("materia", None)]
+                return [SlotSet("materia", None)]
 
             if resolution != "resolved":
                 dispatcher.utter_message(f"😕 No se encontró la materia '{materia}' en la base de datos. Por favor, intenta ingresando otra materia.")
@@ -95,7 +95,7 @@ class ActionConsultarAsistencia(Action):
 
             if not asistencia_resp.data:
                 dispatcher.utter_message(f"📊 No se encontraron registros de asistencia para la matrícula {matricula} en la materia '{nombre_materia}'.")
-                return [SlotSet("flujo_actual", None)]
+                return []
 
             # Calcular estadísticas de asistencia
             clases_asistidas = 0
@@ -138,7 +138,7 @@ class ActionConsultarAsistencia(Action):
             # dispatcher.utter_message(f"📝 **Fórmula utilizada:**")
             # dispatcher.utter_message(f"Porcentaje = ({clases_asistidas} / {total_clases}) × 100 = {porcentaje_formateado}%")
 
-            return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+            return [SlotSet("materia", None)]
 
         except Exception as e:
             print(f"Error al consultar asistencia: {e}")
@@ -162,13 +162,13 @@ class ActionConsultarFechasParciales(Action):
 
         if not matricula:
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar las fechas de los parciales.")
-            return [SlotSet("flujo_actual", "consultar_fechas_parciales")]
+            return []
 
         materia = tracker.get_slot('materia')
 
         if not materia:
             dispatcher.utter_message("❌ No tengo la materia especificada. Por favor, dime de qué materia quieres consultar las fechas de los parciales.")
-            return [SlotSet("flujo_actual", "consultar_fechas_parciales")]
+            return []
 
         try:
             catalog_rows = subject_catalog.get_subjects()
@@ -180,7 +180,6 @@ class ActionConsultarFechasParciales(Action):
                 )
                 return [
                     SlotSet("materia", None),
-                    SlotSet("flujo_actual", "consultar_fechas_parciales"),
                 ]
 
             if resolution_status == "ambiguous":
@@ -191,7 +190,6 @@ class ActionConsultarFechasParciales(Action):
                 )
                 return [
                     SlotSet("materia", None),
-                    SlotSet("flujo_actual", "consultar_fechas_parciales"),
                 ]
 
             materia_codigo = resolution["codigo"]
@@ -202,7 +200,7 @@ class ActionConsultarFechasParciales(Action):
                 dispatcher.utter_message(
                     f"❌ No se encontraron fechas de parciales registradas para la materia '{materia_nombre}'."
                 )
-                return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+                return [SlotSet("materia", None)]
 
             parciales_ordenados = sorted(fechas_parciales_resp.data, key=lambda x: x.get('fecha_parcial', ''))
 
@@ -213,7 +211,7 @@ class ActionConsultarFechasParciales(Action):
                 dispatcher.utter_message(f"• **Parcial nro {i} - {fecha}**")
 
             dispatcher.utter_message(f"✅ Total de parciales encontrados: {len(fechas_parciales_resp.data)}")
-            return [SlotSet("flujo_actual", None), SlotSet("materia", None)]
+            return [SlotSet("materia", None)]
         except Exception as e:
             print(f"Error al consultar fechas de parciales: {e}")
             dispatcher.utter_message("❌ Hubo un error al consultar las fechas de los parciales. Por favor, intenta nuevamente más tarde.")

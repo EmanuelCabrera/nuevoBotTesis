@@ -137,7 +137,7 @@ class GradesActionCharacterizationTests(unittest.TestCase):
         self.assertIn("8/10", "\n".join(self.dispatcher.messages))
         self.assertIn("Parcial 1", "\n".join(self.dispatcher.messages))
         self.assertIn("14/07/2025", "\n".join(self.dispatcher.messages))
-        self.assertEqual(_event_dict(events), {"flujo_actual": None, "materia": None})
+        self.assertEqual(_event_dict(events), {"materia": None})
 
     def test_multiple_grade_records_are_returned_individually(self):
         backend = _Backend({"Notas": [
@@ -169,13 +169,13 @@ class GradesActionCharacterizationTests(unittest.TestCase):
         backend = _Backend()
         events = self.run_action({"is_authenticated": True, "materia": "fisica"}, backend)
         self.assertIn("No tengo tu número de matrícula", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"flujo_actual": "consultar_notas"})
+        self.assertEqual(_event_dict(events), {})
 
     def test_missing_materia(self):
         backend = _Backend()
         events = self.run_action({"is_authenticated": True, "matricula": "66001"}, backend)
         self.assertIn("No tengo la materia especificada", self.dispatcher.messages[0])
-        self.assertEqual(_event_dict(events), {"flujo_actual": "consultar_notas"})
+        self.assertEqual(_event_dict(events), {})
 
     def test_invalid_matricula_format(self):
         backend = _Backend()
