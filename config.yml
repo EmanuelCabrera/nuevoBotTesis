@@ -35,7 +35,7 @@ pipeline:
   ambiguity_threshold: 0.1
 
 policies:
-- name: MemoizationPolicy
+- name: AugmentedMemoizationPolicy
   max_history: 3
 - name: RulePolicy
   core_fallback_threshold: 0.4

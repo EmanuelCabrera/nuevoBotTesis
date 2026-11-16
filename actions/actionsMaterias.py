@@ -98,17 +98,17 @@ class ActionConsultarNotas(Action):
             dispatcher.utter_message("❌ No tengo tu número de matrícula. Por favor, proporciona tu matrícula para poder consultar tus notas.")
             return []
 
-        # Validar y convertir matrícula a entero
-        matricula_str = str(matricula).strip()
-        if len(matricula_str) != 5 or not matricula_str.isdigit():
-            dispatcher.utter_message("❌ La matrícula debe ser un número de 5 dígitos (por ejemplo: 66001, 66022, 66007).")
-            return [SlotSet("matricula", None), SlotSet("flujo_actual", "consultar_notas")]
-
+        # Convertir matrícula a entero
         try:
-            matricula = int(matricula_str)
-        except ValueError:
+            matricula = int(matricula)
+        except (ValueError, TypeError):
             dispatcher.utter_message("❌ El número de matrícula debe ser un número válido.")
             return []
+
+        # Validar longitud de matrícula (debe tener 5 dígitos)
+        if len(str(matricula).strip()) != 5:
+            dispatcher.utter_message("❌ La matrícula debe ser un número de 5 dígitos (por ejemplo: 66001, 66022, 66007).")
+            return [SlotSet("matricula", None)]
 
         # Obtener la materia del slot
         materia = tracker.get_slot('materia')

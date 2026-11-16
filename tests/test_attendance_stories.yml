@@ -78,3 +78,46 @@ stories:
       - slot_was_set:
           - requested_slot: null
       - action: action_consultar_asistencia
+
+  - story: asistencia E - flujo paso a paso sin datos previos y seguimiento de otra materia
+    steps:
+      - slot_was_set:
+          - is_authenticated: true
+      - user: |
+          hola quiero saber mis asistencias
+        intent: consultar_asistencia
+      - action: asistencia_form
+      - active_loop: asistencia_form
+      - slot_was_set:
+          - requested_slot: matricula
+      - user: |
+          [66007](matricula)
+        intent: proporcionar_matricula
+      - slot_was_set:
+          - matricula: "66007"
+      - action: asistencia_form
+      - active_loop: asistencia_form
+      - slot_was_set:
+          - requested_slot: materia
+      - user: |
+          [fisica 1](materia)
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: "fisica 1"
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
+      - slot_was_set:
+          - materia: null
+      - user: |
+          y en [fisica 3](materia)?
+        intent: proporcionar_materia
+      - slot_was_set:
+          - materia: "fisica 3"
+      - action: asistencia_form
+      - active_loop: null
+      - slot_was_set:
+          - requested_slot: null
+      - action: action_consultar_asistencia
